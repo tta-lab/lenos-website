@@ -19,6 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Astro requires Node >=22.12.0; ubuntu-latest ships with v20.
+      # Node is needed for the underlying `astro` binary even though we use
+      # bun for installs and script-running.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
