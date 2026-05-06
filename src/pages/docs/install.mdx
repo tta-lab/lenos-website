@@ -47,18 +47,17 @@ Lenos works with three sister tools from the ttal ecosystem. All three ship thro
 
 ### organon — the agent's CLI tools (recommended)
 
-The bash-first agent loop assumes the agent can call structured CLI tools for code reading/editing, web search, skill discovery, and out-of-band alerts. These come from [organon](https://github.com/tta-lab/organon).
+The bash-first agent loop assumes the agent can call structured CLI tools for code reading/editing, web search, and skill discovery. These come from [organon](https://github.com/tta-lab/organon).
 
 ```bash
 brew install tta-lab/ttal/organon
 ```
 
-This installs four binaries on `PATH`:
+This installs three binaries on `PATH`:
 
 - **`src`** — tree-sitter symbol-aware code reading and editing. Parses files into an AST, assigns each symbol a 2-char ID, edits by symbol reference rather than line number or text match. Works with Go, Rust, TypeScript, Python, and many others.
 - **`web`** — web search (subcommands: `web "<query>"` for search, `web docs` for library docs).
 - **`skill`** — skill discovery CLI used by lenos and the broader ttal ecosystem (`skill get <name>`, `skill list`).
-- **`alert`** — agent-to-bridge alerts (Telegram or Matrix via the bridge service).
 
 The landing-page differentiators that cite `src edit` and `web search` refer to these binaries. Install organon to put them on `PATH` for the agent.
 
