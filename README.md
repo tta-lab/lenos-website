@@ -25,13 +25,13 @@ the design checkpoint preceding this Astro scaffold).
 
 ## Local development
 
-Requires Node 22 LTS or later.
+Requires [Bun](https://bun.sh) 1.3+ (faster installs, faster scripts).
 
 ```bash
-npm install
-npm run dev          # http://localhost:4321/lenos-website/
-npm run build        # → dist/
-npm run preview      # serve dist/ locally
+bun install
+bun run dev          # http://localhost:4321/lenos-website/
+bun run build        # → dist/
+bun run preview      # serve dist/ locally
 ```
 
 **Note the subpath:** `astro dev` serves under `/lenos-website/` because the
