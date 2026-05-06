@@ -1,0 +1,65 @@
+---
+layout: ../../layouts/BaseLayout.astro
+title: "Configuration — lenos"
+description: "Configure providers, models, and runtime behavior via config.json and environment variables."
+---
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+<SiteHeader current="docs" />
+
+<main id="main" style="max-width: 64rem; margin: 0 auto; padding: 4rem 1.5rem 0;">
+<article class="prose">
+
+<p class="eyebrow">Documentation / Getting started</p>
+
+# Configuration
+
+Lenos reads `config.json` from a small set of well-defined locations and falls back to sensible defaults if no config is present.
+
+## Config file locations
+
+In priority order (highest first):
+
+1. `.lenos/config.json` — workspace config, project-specific overrides
+2. `$XDG_DATA_HOME/lenos/config.json` or `~/.local/share/lenos/config.json` — global data
+3. `$XDG_CONFIG_HOME/lenos/config.json` or `~/.config/lenos/config.json` — global config
+
+Workspace configs override global; the workspace one is committed-or-not at your discretion (typical pattern: gitignore project-specific keys, share defaults).
+
+The full schema lives at [`schema.json`](https://github.com/tta-lab/lenos/blob/main/schema.json) in the lenos repo. Editors that respect `$schema` get autocomplete and validation in `config.json`.
+
+## Environment variables
+
+| Variable | Description |
+|---|---|
+| `LENOS_GLOBAL_CONFIG` | Override the global config directory |
+| `LENOS_GLOBAL_DATA` | Override the global data directory |
+| `LENOS_CACHE_DIR` | Override the cache directory |
+| `LENOS_SKILLS_DIR` | Override the skills directory |
+| `LENOS_DISABLE_PROVIDER_AUTO_UPDATE` | Disable automatic provider catalog updates |
+| `LENOS_DISABLE_DEFAULT_PROVIDERS` | Ignore embedded default providers |
+| `LENOS_DISABLE_METRICS` | Disable telemetry |
+| `LENOS_PROFILE` | Enable pprof profiling |
+
+## Provider keys
+
+Provider API keys (Anthropic, OpenAI, Gemini, etc.) are read from standard environment variables (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, etc.). Lenos does not store secrets in `config.json` — keep them in your shell env or a `.env` file outside the repo.
+
+## Skills
+
+Lenos extends agent behavior via skills directories. Place skills in:
+
+- `~/.config/lenos/skills/` — global, available in every project
+- `.lenos/skills/` — project-local, scoped to the workspace
+
+Each skill is a directory containing a `SKILL.md` file. See the [skills reference](https://github.com/tta-lab/lenos) (coming soon) for the full SKILL.md format.
+
+## Hooks
+
+Lifecycle hooks let external tooling react to agent steps. See [hooks](/lenos-website/docs/hooks).
+
+</article>
+</main>
+
+<SiteFooter />
