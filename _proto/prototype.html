@@ -1,0 +1,1130 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lenos — a bash-first AI runtime for the ttal ecosystem</title>
+<meta name="description" content="Lenos is the third manager-plane runtime in the ttal ecosystem. Multi-model, session-based, terminal-native — designed for long-running agents, not solo coding sessions." />
+<!--
+  prototype.html — sage 2026-05-06
+  Self-contained design prototype for lenos-website. NOT the final Astro build.
+  Purpose: validate typography, palette, spatial composition, motion, and the
+  benchmark-table moment by eye before scaffolding Astro 5.
+
+  Fonts: pulled from Google Fonts CDN for prototype speed. Production will
+  self-host woff2 in /public/fonts/ per design doc §4.2.
+
+  Palette: lenos brand tokens from internal/ui/styles/styles.go (terracotta
+  #c4734f, peach-tan #d4a574, antique gold #b8973e, wine-dark #1a1016, cream
+  #f0ebe4, accent amber #ffaf00 for λ glyph).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&display=swap" />
+<style>
+/* =====================================================================
+   1. Tokens — Reading Room Technical, palette-aligned with lenos product
+   ===================================================================== */
+:root {
+  /* Light theme (canonical site surface) — paper-warm, harmonized with lenos cream family */
+  --color-paper:        #f7f1e8;
+  --color-paper-deep:   #ede4d3;
+  --color-paper-rule:   #d8cebe;
+  --color-ink:          #1a1016;   /* lenos bgBase, used as ink — deep wine-near-black */
+  --color-ink-soft:     #4a3d35;
+  --color-ink-mute:     #8a7e6e;
+
+  /* Brand accents — lenos canonical hexes, no improvisation */
+  --color-brand:        #c4734f;   /* terracotta — primary */
+  --color-brand-soft:   #d4a574;   /* peach-tan — secondary */
+  --color-brand-gold:   #b8973e;   /* antique gold — restraint accent (λ glyph) */
+  --color-brand-amber:  #ffaf00;   /* phosphor amber — used very sparingly */
+  --color-brand-tint:   rgb(196 115 79 / 0.18);  /* highlight wash */
+
+  /* Code surface */
+  --color-code-bg:      #ede4d3;
+  --color-code-border:  #d8cebe;
+
+  /* Diagnostic — borrowed for benchmark cell decoration if needed */
+  --color-success:      #6a9955;
+  --color-danger:       #be5046;
+
+  /* Type families */
+  --font-display: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-body:    "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-mono:    "JetBrains Mono", "SF Mono", "Cascadia Code", monospace;
+
+  /* Editorial scale */
+  --text-display-xl: clamp(2.5rem, 5vw + 0.5rem, 4.5rem);
+  --text-display-l:  clamp(1.875rem, 2.5vw + 0.5rem, 2.625rem);
+  --text-display-m:  1.6875rem;
+  --text-h2:         1.5rem;
+  --text-h3:         1.25rem;
+  --text-body:       1.0625rem;
+  --text-small:      0.9375rem;
+  --text-xs:         0.8125rem;
+  --text-mono:       0.9rem;
+  --text-mono-block: 0.875rem;
+
+  /* Leading */
+  --leading-display: 1.1;
+  --leading-prose:   1.65;
+  --leading-mono:    1.55;
+
+  /* Container widths */
+  --container-marketing: 64rem;
+  --container-prose:     38rem;
+
+  /* Vertical rhythm */
+  --section-gap: 5rem;
+
+  /* Motion */
+  --ease-editorial: cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  /* Dark theme = lenos product palette directly */
+  --color-paper:       #1a1016;     /* lenos bgBase */
+  --color-paper-deep:  #2d2329;     /* lenos bgBaseLighter */
+  --color-paper-rule:  #3d3338;
+  --color-ink:         #f0ebe4;     /* lenos fgBase */
+  --color-ink-soft:    #c4bab0;     /* lenos fgHalfMuted */
+  --color-ink-mute:    #a89d94;     /* lenos fgMuted */
+
+  --color-brand:       #d4a574;     /* shift to peach-tan for luminance on dark */
+  --color-brand-soft:  #c4734f;
+  --color-brand-gold:  #b8973e;
+  --color-brand-tint:  rgb(212 165 116 / 0.18);
+
+  --color-code-bg:     #2d2329;
+  --color-code-border: #3d3338;
+}
+
+/* =====================================================================
+   2. Reset & base
+   ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 240ms var(--ease-editorial),
+              color 240ms var(--ease-editorial);
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+::selection {
+  background: var(--color-brand-tint);
+  color: var(--color-ink);
+}
+
+/* Skip link */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 0.5rem 1rem;
+  z-index: 100;
+}
+.skip:focus { left: 0; top: 0; }
+
+/* =====================================================================
+   3. Header
+   ===================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgb(from var(--color-paper) r g b / 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-paper-rule);
+}
+.site-header-inner {
+  max-width: var(--container-marketing);
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.wordmark .lambda {
+  color: var(--color-brand-gold);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1;
+  transform: translateY(0.05em);
+}
+.nav {
+  display: flex;
+  gap: 1.75rem;
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-size: var(--text-small);
+}
+.nav a {
+  position: relative;
+  color: var(--color-ink-soft);
+  transition: color 200ms var(--ease-editorial);
+}
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -3px;
+  height: 1px;
+  background: var(--color-brand);
+  transition: right 240ms var(--ease-editorial);
+}
+.nav a:hover { color: var(--color-ink); }
+.nav a:hover::after { right: 0; }
+.nav a[aria-current="page"] {
+  color: var(--color-ink);
+}
+.nav a[aria-current="page"]::after {
+  right: 0;
+}
+.nav a.external::after { content: "↗"; position: static; height: auto; background: none; margin-left: 0.2em; font-size: 0.85em; color: var(--color-ink-mute); }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  color: var(--color-ink-mute);
+  transition: color 200ms var(--ease-editorial), background 200ms var(--ease-editorial);
+}
+.theme-toggle:hover { color: var(--color-ink); background: var(--color-paper-deep); }
+.theme-toggle svg { width: 16px; height: 16px; }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+/* =====================================================================
+   4. Hero (editorial)
+   ===================================================================== */
+.hero {
+  max-width: var(--container-marketing);
+  margin: 0 auto;
+  padding: 5.5rem 1.5rem 4rem;
+}
+.hero-statement {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-display-xl);
+  line-height: var(--leading-display);
+  letter-spacing: -0.018em;
+  color: var(--color-ink);
+  max-width: 22ch;
+  margin: 0;
+  text-wrap: balance;
+}
+.hero-statement .mark {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  color: var(--color-ink);
+}
+.hero-statement .mark::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0.16em 0;
+  height: 0.42em;
+  background: var(--color-brand-tint);
+  z-index: -1;
+  transform: skewX(-2deg);
+  border-radius: 1px;
+}
+.hero-subhead {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-h3);
+  line-height: 1.55;
+  color: var(--color-ink-soft);
+  max-width: 40ch;
+  margin: 1.75rem 0 0;
+  text-wrap: pretty;
+}
+.hero-cta {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+}
+.hero-cta-primary {
+  color: var(--color-brand);
+  font-weight: 500;
+}
+.hero-cta-primary:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; text-decoration-color: var(--color-brand); }
+.hero-cta-divider {
+  color: var(--color-ink-mute);
+  user-select: none;
+}
+.hero-cta-secondary {
+  color: var(--color-ink);
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms var(--ease-editorial);
+}
+.hero-cta-secondary:hover { border-color: var(--color-ink); }
+
+/* Stagger reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: reveal 700ms var(--ease-editorial) forwards;
+}
+.reveal-1 { animation-delay: 0ms; }
+.reveal-2 { animation-delay: 120ms; }
+.reveal-3 { animation-delay: 240ms; }
+
+@keyframes reveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; transform: none; }
+}
+
+/* =====================================================================
+   5. Differentiators
+   ===================================================================== */
+.differentiators {
+  max-width: var(--container-marketing);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  border-top: 1px solid var(--color-paper-rule);
+}
+.differentiator {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  gap: 0 2rem;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--color-paper-rule);
+}
+.differentiator:last-child { border-bottom: none; }
+.differentiator-marker {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-mute);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.45rem;
+}
+.differentiator-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.differentiator-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-display-m);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--color-ink);
+}
+.differentiator-prose {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  color: var(--color-ink-soft);
+  margin: 0;
+  max-width: 56ch;
+}
+.differentiator-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-border);
+  padding: 0.05em 0.4em;
+  border-radius: 2px;
+}
+@media (max-width: 640px) {
+  .differentiator { grid-template-columns: 1fr; gap: 0.5rem; }
+}
+
+/* =====================================================================
+   6. Install strip
+   ===================================================================== */
+.install {
+  max-width: var(--container-marketing);
+  margin: 0 auto;
+  padding: 4rem 1.5rem 0;
+}
+.install-heading {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  letter-spacing: 0.08em;
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--color-ink-mute);
+  margin: 0 0 1rem;
+}
+.install-rows {
+  border: 1px solid var(--color-code-border);
+  background: var(--color-code-bg);
+  border-radius: 0;
+}
+.install-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--color-code-border);
+  cursor: pointer;
+  transition: background 150ms var(--ease-editorial);
+}
+.install-row:last-child { border-bottom: none; }
+.install-row:hover { background: rgb(from var(--color-paper) r g b / 0.5); }
+.install-label {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  letter-spacing: 0.08em;
+  font-size: var(--text-small);
+  color: var(--color-ink-mute);
+}
+.install-cmd {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.install-cmd .prompt {
+  color: var(--color-brand-gold);
+  user-select: none;
+  margin-right: 0.5em;
+}
+.install-copy {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-mute);
+  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 200ms var(--ease-editorial);
+}
+.install-row:hover .install-copy { color: var(--color-ink-soft); }
+.install-copy.copied { color: var(--color-success); }
+.install-copy svg { width: 13px; height: 13px; }
+@media (max-width: 640px) {
+  .install-row { grid-template-columns: 1fr; gap: 0.25rem; padding: 1rem 1rem; }
+  .install-copy { justify-self: end; }
+}
+
+/* =====================================================================
+   7. Benchmark table — the key moment
+   ===================================================================== */
+.benchmark {
+  max-width: var(--container-marketing);
+  margin: 0 auto;
+  padding: 5rem 1.5rem 0;
+}
+.benchmark-head {
+  margin-bottom: 1.5rem;
+}
+.benchmark-eyebrow {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  letter-spacing: 0.1em;
+  font-size: var(--text-xs);
+  color: var(--color-ink-mute);
+  margin: 0 0 0.5rem;
+}
+.benchmark-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-display-l);
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--color-ink);
+}
+.benchmark-subhead {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-small);
+  color: var(--color-ink-mute);
+  margin: 0.5rem 0 0;
+}
+.benchmark-subhead a {
+  color: var(--color-brand);
+  border-bottom: 1px solid var(--color-brand);
+  font-style: normal;
+}
+.benchmark-table-wrap {
+  border-top: 1px solid var(--color-paper-rule);
+  margin-top: 1.5rem;
+  overflow-x: auto;
+}
+table.benchmark-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+}
+.benchmark-table thead th {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  letter-spacing: 0.1em;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-ink-mute);
+  text-align: left;
+  padding: 1rem 1rem 0.75rem 0;
+  border-bottom: 1px solid var(--color-paper-rule);
+  white-space: nowrap;
+}
+.benchmark-table thead th.num { text-align: right; padding-right: 1rem; }
+.benchmark-table tbody tr {
+  transition: background 150ms var(--ease-editorial);
+  border-bottom: 1px solid var(--color-paper-rule);
+}
+.benchmark-table tbody tr:last-child { border-bottom: none; }
+.benchmark-table tbody tr:hover { background: var(--color-paper-deep); }
+.benchmark-table td {
+  padding: 0.875rem 1rem 0.875rem 0;
+  font-size: var(--text-body);
+  color: var(--color-ink);
+  vertical-align: baseline;
+}
+.benchmark-table td.num,
+.benchmark-table td.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-mono);
+  text-align: right;
+  padding-right: 1rem;
+  color: var(--color-ink);
+}
+.benchmark-table td.model { font-weight: 500; }
+.benchmark-table td.provider { color: var(--color-ink-soft); font-size: var(--text-small); }
+.agent-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.55rem;
+  background: transparent;
+  border: 1px solid var(--color-paper-rule);
+  color: var(--color-ink-soft);
+}
+.agent-pill.is-lenos {
+  background: var(--color-brand-tint);
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+[data-theme="dark"] .agent-pill.is-lenos { color: var(--color-brand); }
+
+.benchmark-caption {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-small);
+  color: var(--color-ink-mute);
+  margin: 1.5rem 0 0;
+  max-width: 60ch;
+  line-height: 1.55;
+}
+
+/* =====================================================================
+   8. Philosophy
+   ===================================================================== */
+.philosophy {
+  max-width: var(--container-marketing);
+  margin: 0 auto;
+  padding: var(--section-gap) 1.5rem 0;
+}
+.philosophy-inner {
+  max-width: var(--container-prose);
+}
+.philosophy-eyebrow {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  letter-spacing: 0.1em;
+  font-size: var(--text-xs);
+  color: var(--color-ink-mute);
+  margin: 0 0 0.75rem;
+}
+.philosophy-prose {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  color: var(--color-ink);
+}
+.philosophy-prose p {
+  margin: 0 0 1.4em;
+  text-wrap: pretty;
+}
+.philosophy-prose p:last-child { margin-bottom: 0; }
+.philosophy-prose p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 3.6em;
+  line-height: 0.85;
+  float: left;
+  margin: 0.05em 0.12em -0.05em 0;
+  color: var(--color-brand);
+}
+.philosophy-prose em { color: var(--color-ink-soft); }
+.philosophy-prose .footnote-mark {
+  font-size: 0.75em;
+  vertical-align: 0.3em;
+  color: var(--color-brand-gold);
+  margin-left: 0.05em;
+}
+.philosophy-footnote {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-small);
+  color: var(--color-ink-mute);
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-paper-rule);
+  max-width: var(--container-prose);
+  line-height: 1.55;
+}
+.philosophy-footnote .footnote-mark { color: var(--color-brand-gold); margin-right: 0.4em; }
+
+/* =====================================================================
+   9. Screenshot block (optional, deferred — placeholder)
+   ===================================================================== */
+.screenshot {
+  max-width: var(--container-marketing);
+  margin: 0 auto;
+  padding: var(--section-gap) 1.5rem 0;
+}
+.screenshot-frame {
+  background: var(--color-paper-deep);
+  border: 1px solid var(--color-paper-rule);
+  padding: 0.6rem;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-block);
+  color: var(--color-ink-mute);
+  text-align: center;
+}
+.screenshot-frame .stub {
+  display: block;
+  padding: 5rem 1rem;
+  border: 1px dashed var(--color-paper-rule);
+  background: var(--color-paper);
+}
+.screenshot-caption {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-small);
+  color: var(--color-ink-mute);
+  margin: 0.75rem 0 0;
+  text-align: center;
+}
+
+/* =====================================================================
+   10. Footer
+   ===================================================================== */
+.site-footer {
+  margin-top: var(--section-gap);
+  background: var(--color-paper-deep);
+  border-top: 1px solid var(--color-paper-rule);
+}
+.footer-inner {
+  max-width: var(--container-marketing);
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 2.5rem;
+}
+.footer-block-title {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  letter-spacing: 0.1em;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-ink-mute);
+  margin: 0 0 0.75rem;
+}
+.footer-lineage {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--color-ink-soft);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 50ch;
+}
+.footer-lineage a {
+  color: var(--color-brand);
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms var(--ease-editorial);
+}
+.footer-lineage a:hover { border-color: var(--color-brand); }
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--color-ink-soft);
+}
+.footer-links li { padding: 0.2rem 0; }
+.footer-links a { border-bottom: 1px solid transparent; transition: border-color 200ms var(--ease-editorial); }
+.footer-links a:hover { border-bottom-color: var(--color-ink-mute); color: var(--color-ink); }
+
+.colophon {
+  border-top: 1px solid var(--color-paper-rule);
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-xs);
+  color: var(--color-ink-mute);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+.colophon code {
+  font-family: var(--font-mono);
+  font-style: normal;
+  background: var(--color-paper);
+  padding: 0.05em 0.35em;
+  border: 1px solid var(--color-paper-rule);
+  font-size: 0.95em;
+}
+
+@media (max-width: 720px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* =====================================================================
+   11. Focus styles
+   ===================================================================== */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- =================================================================
+     HEADER
+     ================================================================= -->
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="wordmark" aria-label="Lenos home">
+      <span>lenos</span>
+      <span class="lambda" aria-hidden="true">λ</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/" aria-current="page">Home</a>
+      <a href="/docs">Docs</a>
+      <a href="/blog">Blog</a>
+      <a href="/benchmarks">Benchmarks</a>
+      <a href="https://github.com/tta-lab/lenos" class="external" rel="noopener">GitHub</a>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme" id="themeToggle">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- =================================================================
+     HERO
+     ================================================================= -->
+<section class="hero" aria-labelledby="hero-statement">
+  <h1 class="hero-statement reveal reveal-1" id="hero-statement">
+    No protocol. Just <span class="mark">shell</span>.
+  </h1>
+  <p class="hero-subhead reveal reveal-2">
+    Lenos is an AI runtime with no tool-call layer. Models output raw bash;
+    a sandbox runs it; output comes back. Compatible with every model that
+    speaks shell — fewer tokens, fewer provider quirks, parallel calls for
+    free.
+  </p>
+  <div class="hero-cta reveal reveal-3">
+    <a class="hero-cta-primary" href="/docs/install">Install lenos →</a>
+    <span class="hero-cta-divider" aria-hidden="true">·</span>
+    <a class="hero-cta-secondary" href="#philosophy">Read the philosophy →</a>
+  </div>
+</section>
+
+<!-- =================================================================
+     KEY DIFFERENTIATORS
+     ================================================================= -->
+<section class="differentiators" aria-label="Key differentiators">
+  <div class="differentiator">
+    <div class="differentiator-marker">i.</div>
+    <div class="differentiator-body">
+      <h2 class="differentiator-title">Compatible with any model that speaks bash.</h2>
+      <p class="differentiator-prose">
+        Lenos drops the tool-call abstraction. Models output raw shell —
+        <code>cat</code>, <code>src edit</code>, <code>web search</code>, <code>rg</code> —
+        and the runtime executes it in a sandbox. No provider-specific
+        tool-call formats to track. No <code>tool_use_id</code> mismatches
+        when the model's output drifts from the runtime's schema.<sup style="font-size:0.7em;color:var(--color-brand-gold);"><a href="https://github.com/anthropics/claude-code/issues/3886" style="color:inherit;border-bottom:none;">†</a></sup>
+        No <em>「please use parallel tool calls」</em> prompts the model ignores;
+        in bash, parallel is just <code>cmd1 &amp; cmd2 &amp; wait</code>.
+        Every model that speaks shell understands lenos.
+      </p>
+      <p class="differentiator-prose" style="font-size:var(--text-small); color:var(--color-ink-mute); font-style:italic; margin-top:0.6rem;">
+        † real-world examples:
+        <a href="https://github.com/anthropics/claude-code/issues/3886" style="color:var(--color-ink-soft); border-bottom:1px solid var(--color-paper-rule);">anthropics/claude-code #3886</a>
+        (missing tool_result),
+        <a href="https://github.com/ollama/ollama/issues/12395" style="color:var(--color-ink-soft); border-bottom:1px solid var(--color-paper-rule);">ollama/ollama #12395</a>
+        (Anthropic-compat backend pairing failure),
+        <a href="https://agi-xiaobai-no1.github.io/posts/model-switching-tool-use-compatibility/" style="color:var(--color-ink-soft); border-bottom:1px solid var(--color-paper-rule);">model-switching incompatibility</a>
+        (Anthropic <code style="font-style:normal;">tooluse_xxx</code> ↔ OpenAI <code style="font-style:normal;">call_xxx</code> drift). Every framework that maintains a tool-call schema fights this.
+      </p>
+    </div>
+  </div>
+  <div class="differentiator">
+    <div class="differentiator-marker">ii.</div>
+    <div class="differentiator-body">
+      <h2 class="differentiator-title">Sandbox by default. No permission JSON.</h2>
+      <p class="differentiator-prose">
+        Lenos ships with the temenos sandbox enabled by default and
+        auto-configured. Filesystem isolation comes for free. No yolo flags
+        to remember, no permission dialogs interrupting your flow, no
+        hundred-line permission JSON to maintain across projects. The agent
+        runs in a box; the box has the rights it needs; you don't think
+        about it.
+      </p>
+    </div>
+  </div>
+  <div class="differentiator">
+    <div class="differentiator-marker">iii.</div>
+    <div class="differentiator-body">
+      <h2 class="differentiator-title">Less, by design.</h2>
+      <p class="differentiator-prose">
+        Bash output costs fewer tokens than structured tool-call JSON. The
+        benchmark above is partly an experiment in this hypothesis. The
+        deeper bet: optimize the most-common path, and everything else
+        follows — simpler runtime, lower cost, fewer abstractions to debug.
+        <em>「Perfection is achieved, not when there is nothing more to add,
+        but when there is nothing left to take away.」</em> &mdash; Saint-Exupéry,
+        <em>Terre des Hommes</em>, 1939.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================
+     INSTALL STRIP
+     ================================================================= -->
+<section class="install" aria-labelledby="install-heading">
+  <h2 id="install-heading" class="install-heading">Install</h2>
+  <div class="install-rows">
+    <div class="install-row" data-cmd="brew install tta-lab/ttal/lenos" tabindex="0" role="button" aria-label="Copy Homebrew install command">
+      <div class="install-label">Homebrew</div>
+      <div class="install-cmd"><span class="prompt">$</span>brew install tta-lab/ttal/lenos</div>
+      <div class="install-copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="install-copy-text">Copy</span>
+      </div>
+    </div>
+    <div class="install-row" data-cmd="go install github.com/tta-lab/lenos@latest" tabindex="0" role="button" aria-label="Copy Go install command">
+      <div class="install-label">Go install</div>
+      <div class="install-cmd"><span class="prompt">$</span>go install github.com/tta-lab/lenos@latest</div>
+      <div class="install-copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="install-copy-text">Copy</span>
+      </div>
+    </div>
+    <div class="install-row" data-cmd="curl -L https://github.com/tta-lab/lenos/releases/latest/download/lenos -o /usr/local/bin/lenos &amp;&amp; chmod +x /usr/local/bin/lenos" tabindex="0" role="button" aria-label="Copy binary install command">
+      <div class="install-label">Binary</div>
+      <div class="install-cmd"><span class="prompt">$</span>curl -L .../releases/latest/download/lenos -o /usr/local/bin/lenos</div>
+      <div class="install-copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="install-copy-text">Copy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================
+     BENCHMARK TABLE — the key moment
+     ================================================================= -->
+<section class="benchmark" aria-labelledby="bench-title">
+  <header class="benchmark-head">
+    <p class="benchmark-eyebrow">Results</p>
+    <h2 id="bench-title" class="benchmark-title">Terminal Bench 2.0</h2>
+    <p class="benchmark-subhead">
+      <em>Reproducible benchmark, agent-editable. Generated 2026-05-06 — </em>
+      <a href="#methodology">methodology →</a>
+      <em>. Placeholder data; real harness in development.</em>
+    </p>
+  </header>
+  <div class="benchmark-table-wrap">
+    <table class="benchmark-table">
+      <thead>
+        <tr>
+          <th scope="col">Model</th>
+          <th scope="col">Provider</th>
+          <th scope="col">Agent</th>
+          <th scope="col" class="num">Solved <span aria-hidden="true">/80</span></th>
+          <th scope="col" class="num">Input tokens</th>
+          <th scope="col" class="num">Output tokens</th>
+          <th scope="col" class="num">Wall time</th>
+          <th scope="col" class="num">Cost (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="model">gpt-5.4</td>
+          <td class="provider">OpenAI</td>
+          <td><span class="agent-pill is-lenos">lenos</span></td>
+          <td class="num">52</td>
+          <td class="num">3,950,000</td>
+          <td class="num">410,000</td>
+          <td class="num">03:42:00</td>
+          <td class="num">$21.05</td>
+        </tr>
+        <tr>
+          <td class="model">deepseek-v4-pro</td>
+          <td class="provider">DeepSeek</td>
+          <td><span class="agent-pill is-lenos">lenos</span></td>
+          <td class="num">49</td>
+          <td class="num">4,120,000</td>
+          <td class="num">380,000</td>
+          <td class="num">04:00:00</td>
+          <td class="num">$8.40</td>
+        </tr>
+        <tr>
+          <td class="model">mimo-v2.5-pro</td>
+          <td class="provider">MiniMax</td>
+          <td><span class="agent-pill is-lenos">lenos</span></td>
+          <td class="num">45</td>
+          <td class="num">4,840,000</td>
+          <td class="num">410,000</td>
+          <td class="num">04:35:00</td>
+          <td class="num">$9.20</td>
+        </tr>
+        <tr>
+          <td class="model">mimo-v2.5</td>
+          <td class="provider">MiniMax</td>
+          <td><span class="agent-pill is-lenos">lenos</span></td>
+          <td class="num">42</td>
+          <td class="num">4,300,000</td>
+          <td class="num">370,000</td>
+          <td class="num">04:12:00</td>
+          <td class="num">$5.80</td>
+        </tr>
+        <tr>
+          <td class="model">deepseek-v4-flash</td>
+          <td class="provider">DeepSeek</td>
+          <td><span class="agent-pill is-lenos">lenos</span></td>
+          <td class="num">38</td>
+          <td class="num">3,200,000</td>
+          <td class="num">280,000</td>
+          <td class="num">02:55:00</td>
+          <td class="num">$2.10</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="benchmark-caption" id="methodology">
+    Methodology: 80 tasks from the Terminal Bench 2.0 corpus, single-shot
+    evaluation, default agent config. Above: lenos run across its planned
+    model surface — gpt-5.4, deepseek-v4-pro and v4-flash, mimo-v2.5 and
+    v2.5-pro. Cross-runtime comparison rows (lenos vs codex vs forgecode on
+    a fixed model) ship in a sibling table once those harnesses are wired
+    up. Source: <a href="https://github.com/tta-lab/terminal-bench-runs" style="color:var(--color-brand);border-bottom:1px solid var(--color-brand);">tta-lab/terminal-bench-runs</a>; updates land via PR with a
+    fresh <code>tb2.json</code>. Numbers above are placeholder pending the
+    v1.0.0 harness — this caption stays here, calling that out, until the
+    real numbers are in.
+  </p>
+</section>
+
+<!-- =================================================================
+     PHILOSOPHY
+     ================================================================= -->
+<section class="philosophy" id="philosophy" aria-labelledby="philosophy-title">
+  <div class="philosophy-inner">
+    <p class="philosophy-eyebrow">On the design</p>
+    <h2 id="philosophy-title" class="differentiator-title" style="margin-bottom: 1.25rem;">
+      By subtraction.
+    </h2>
+    <div class="philosophy-prose">
+      <p>
+        Lenos started as a fork of <a href="https://github.com/charmbracelet/crush" style="color:var(--color-brand);border-bottom:1px solid var(--color-brand);">Crush</a><span class="footnote-mark">*</span>
+        by Charmbracelet. We owe them the foundation. What we changed is less
+        about adding and more about taking away — the tool-call layer, the
+        permission management, the assumption that an AI agent needs its own
+        protocol for talking to a computer.
+      </p>
+      <p>
+        What's left is small: a model, a sandboxed shell, a transcript.
+        Sandbox isolation comes for free from temenos. Multi-model support
+        comes for free from speaking shell instead of tool-call JSON. Lower
+        cost comes for free from fewer tokens. Each removal made the next
+        one possible.
+      </p>
+      <p>
+        If you've been frustrated by your runtime's tool-call edge cases,
+        your agent's permission management, or your model's reluctance to
+        run parallel tool calls — the <a href="/docs/install" style="color:var(--color-brand);border-bottom:1px solid var(--color-brand);">docs</a> are a fast read.
+      </p>
+    </div>
+    <p class="philosophy-footnote">
+      <span class="footnote-mark">*</span>
+      <em>λ — lenos in lowercase greek; from λῆνος, the wine-press.
+      A vat where input is gathered, transformed, and refined into output.
+      An old name for an old idea; we like the lineage.</em>
+    </p>
+  </div>
+</section>
+
+<!-- =================================================================
+     SCREENSHOT (placeholder; real screenshot drops in here)
+     ================================================================= -->
+<section class="screenshot" aria-label="lenos in use">
+  <div class="screenshot-frame">
+    <span class="stub">[ screenshot: lenos running as the coder agent in ttal — drops in here ]</span>
+  </div>
+  <p class="screenshot-caption">
+    <em>lenos running as the coder agent inside ttal — sandbox-isolated, multi-step, transcript-recorded.</em>
+  </p>
+</section>
+
+</main>
+
+<!-- =================================================================
+     FOOTER
+     ================================================================= -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-block-title">Lineage</p>
+      <p class="footer-lineage">
+        Lenos is a fork of <a href="https://github.com/charmbracelet/crush">Crush</a> by
+        <a href="https://charm.sh">Charmbracelet</a>, originally created by
+        <a href="https://github.com/kujtimiihoxha">Kujtim Hoxha</a>. We are
+        grateful for the foundation. Distributed under
+        <a href="https://github.com/tta-lab/lenos/blob/main/LICENSE.md">FSL-1.1-MIT</a>.
+      </p>
+    </div>
+    <div>
+      <p class="footer-block-title">Project</p>
+      <ul class="footer-links">
+        <li><a href="https://github.com/tta-lab/lenos">Source</a></li>
+        <li><a href="https://github.com/tta-lab/lenos/releases">Releases</a></li>
+        <li><a href="https://github.com/tta-lab/lenos/issues">Issues</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-block-title">Ecosystem</p>
+      <ul class="footer-links">
+        <li><a href="https://github.com/tta-lab/ttal-cli">ttal</a></li>
+        <li><a href="https://github.com/tta-lab/lenos">lenos</a></li>
+        <li><a href="https://github.com/tta-lab">tta-lab</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="colophon">
+    Set in <em>Source Serif 4</em> and <em>JetBrains Mono</em>. Built with
+    <code>astro</code> on <code>tta-lab.github.io/lenos-website</code>.
+  </div>
+</footer>
+
+<script>
+  // Theme toggle — persisted in localStorage
+  (function () {
+    const root = document.documentElement;
+    const stored = localStorage.getItem('lenos-theme');
+    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      root.setAttribute('data-theme', 'dark');
+    }
+    const btn = document.getElementById('themeToggle');
+    btn.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('lenos-theme', next);
+    });
+  })();
+
+  // Copy-to-clipboard for install rows
+  (function () {
+    document.querySelectorAll('.install-row').forEach((row) => {
+      const cmd = row.dataset.cmd;
+      const copyEl = row.querySelector('.install-copy');
+      const txt = row.querySelector('.install-copy-text');
+      const trigger = async () => {
+        try {
+          await navigator.clipboard.writeText(cmd);
+          copyEl.classList.add('copied');
+          txt.textContent = 'Copied';
+          setTimeout(() => {
+            copyEl.classList.remove('copied');
+            txt.textContent = 'Copy';
+          }, 1400);
+        } catch (e) {
+          txt.textContent = 'Failed';
+        }
+      };
+      row.addEventListener('click', trigger);
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trigger(); }
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
