@@ -1,0 +1,134 @@
+---
+interface Method {
+  label: string;
+  command: string;
+  display?: string;       // optional shortened display, falls back to command
+}
+interface Props {
+  methods: Method[];
+}
+const { methods } = Astro.props;
+---
+<section class="install" aria-labelledby="install-heading">
+  <h2 id="install-heading" class="install-heading">Install</h2>
+  <div class="install-rows">
+    {methods.map((m) => (
+      <div class="install-row" data-cmd={m.command} tabindex="0" role="button" aria-label={`Copy ${m.label} install command`}>
+        <div class="install-label">{m.label}</div>
+        <div class="install-cmd"><span class="prompt">$</span>{m.display ?? m.command}</div>
+        <div class="install-copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="1"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span class="install-copy-text">Copy</span>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.install-row').forEach((row) => {
+    const cmd = row.dataset.cmd ?? '';
+    const copyEl = row.querySelector('.install-copy');
+    const txt = row.querySelector('.install-copy-text');
+    if (!copyEl || !txt) return;
+    const trigger = async () => {
+      try {
+        await navigator.clipboard.writeText(cmd);
+        copyEl.classList.add('copied');
+        txt.textContent = 'Copied';
+        setTimeout(() => {
+          copyEl.classList.remove('copied');
+          txt.textContent = 'Copy';
+        }, 1400);
+      } catch (e) {
+        txt.textContent = 'Failed';
+      }
+    };
+    row.addEventListener('click', trigger);
+    row.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        trigger();
+      }
+    });
+  });
+</script>
+
+<style>
+  .install {
+    max-width: var(--container-marketing);
+    margin: 0 auto;
+    padding: 4rem 1.5rem 0;
+  }
+  .install-heading {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.08em;
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--color-ink-mute);
+    margin: 0 0 1rem;
+  }
+  .install-rows {
+    border: 1px solid var(--color-code-border);
+    background: var(--color-code-bg);
+  }
+  .install-row {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--color-code-border);
+    cursor: pointer;
+    transition: background 150ms var(--ease-editorial);
+  }
+  .install-row:last-child { border-bottom: none; }
+  .install-row:hover { background: rgb(from var(--color-paper) r g b / 0.5); }
+  .install-label {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.08em;
+    font-size: var(--text-small);
+    color: var(--color-ink-mute);
+  }
+  .install-cmd {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono);
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .install-cmd .prompt {
+    color: var(--color-brand-gold);
+    user-select: none;
+    margin-right: 0.5em;
+  }
+  .install-copy {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-mute);
+    letter-spacing: 0.08em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 200ms var(--ease-editorial);
+  }
+  .install-row:hover .install-copy { color: var(--color-ink-soft); }
+  .install-copy.copied { color: var(--color-success); }
+  .install-copy svg { width: 13px; height: 13px; }
+  @media (max-width: 640px) {
+    .install-row {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+      padding: 1rem;
+    }
+    .install-copy { justify-self: end; }
+  }
+</style>

@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import BenchmarkTable from "../components/BenchmarkTable.astro";
+---
+<BaseLayout title="Benchmarks — lenos">
+  <SiteHeader current="benchmarks" />
+  <main id="main">
+    <BenchmarkTable />
+    <section class="how-to">
+      <h2>How to update this table</h2>
+      <p>
+        Benchmark data lives at <code>src/data/benchmarks/tb2.json</code>.
+        Updating the table means landing a PR with a fresh JSON file —
+        agent-editable, schema-validated, no special tooling.
+      </p>
+      <p>
+        The full corpus (80 tasks) and harness live at
+        <a href="https://github.com/tta-lab/terminal-bench-runs">tta-lab/terminal-bench-runs</a>.
+        Cross-runtime comparison rows (lenos vs codex vs forgecode on a fixed
+        model) ship in a sibling table once those harnesses are wired up.
+      </p>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .how-to {
+    max-width: var(--container-marketing);
+    margin: 0 auto;
+    padding: 4rem 1.5rem 0;
+  }
+  .how-to {
+    max-width: 50rem;
+  }
+  .how-to h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-display-m);
+    letter-spacing: -0.01em;
+    margin: 0 0 1rem;
+    color: var(--color-ink);
+  }
+  .how-to p {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--leading-prose);
+    color: var(--color-ink-soft);
+    margin: 0 0 1.4em;
+    max-width: 60ch;
+  }
+  .how-to a {
+    color: var(--color-brand);
+    border-bottom: 1px solid var(--color-brand);
+  }
+  .how-to code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-code-border);
+    padding: 0.05em 0.4em;
+  }
+</style>

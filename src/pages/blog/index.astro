@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+---
+<BaseLayout title="Blog — lenos">
+  <SiteHeader current="blog" />
+  <main id="main" class="blog-shell">
+    <article>
+      <p class="eyebrow">Blog</p>
+      <h1>Notes from the lenos team.</h1>
+      <p class="lede">
+        Posts on bash-first agent design, terminal benchmark results, and
+        the small ideas behind a small runtime. First post lands when it's
+        ready — not before.
+      </p>
+      <p class="empty"><em>No posts yet. Check back soon.</em></p>
+    </article>
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .blog-shell {
+    max-width: var(--container-marketing);
+    margin: 0 auto;
+    padding: 4rem 1.5rem 0;
+  }
+  article { max-width: var(--container-prose); }
+  .eyebrow {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.1em;
+    font-size: var(--text-xs);
+    color: var(--color-ink-mute);
+    margin: 0 0 0.5rem;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-display-l);
+    letter-spacing: -0.012em;
+    line-height: 1.15;
+    color: var(--color-ink);
+    margin: 0 0 1rem;
+  }
+  .lede {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-h3);
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+    margin: 0 0 2.5rem;
+    max-width: 50ch;
+  }
+  .empty {
+    font-family: var(--font-body);
+    color: var(--color-ink-mute);
+    border-top: 1px solid var(--color-paper-rule);
+    padding-top: 2rem;
+  }
+</style>

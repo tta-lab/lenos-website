@@ -1,0 +1,47 @@
+---
+layout: ../../layouts/BaseLayout.astro
+title: "Install — lenos"
+description: "Install lenos via Homebrew, Go's toolchain, or a pre-built binary."
+---
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+<SiteHeader current="docs" />
+
+<main id="main" style="max-width: 64rem; margin: 0 auto; padding: 4rem 1.5rem 0;">
+<article class="prose">
+
+<p class="eyebrow">Documentation / Getting started</p>
+
+# Install
+
+Lenos is distributed three ways: Homebrew (recommended for ttal users), Go's toolchain, or a pre-built binary from the releases page.
+
+## Homebrew
+
+```bash
+brew install tta-lab/ttal/lenos
+```
+
+This taps the `tta-lab/homebrew-ttal` repository and installs the `lenos` binary to your Homebrew prefix. The same tap distributes `ttal` and `flicknote`.
+
+## Go install
+
+```bash
+go install github.com/tta-lab/lenos@latest
+```
+
+Requires Go 1.23 or later.
+
+## Binary
+
+Download a pre-built archive for your platform from the [releases page](https://github.com/tta-lab/lenos/releases) and place the extracted binary on your `PATH`.
+
+---
+
+After installation, run `lenos --help` to verify. The first invocation creates `~/.config/lenos/config.json` with default providers; configure your model keys there or via environment variables documented in the configuration reference (coming soon).
+
+</article>
+</main>
+
+<SiteFooter />

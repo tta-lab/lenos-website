@@ -1,0 +1,60 @@
+{
+  "$comment": "Terminal Bench 2.0 — placeholder data pending v1.0.0 harness. Update via PR with a fresh tb2.json. The methodology caption clearly marks numbers as placeholder until the harness ships.",
+  "generated_at": "2026-05-06T00:00:00Z",
+  "harness_version": "0.0.1-placeholder",
+  "harness_repo": "https://github.com/tta-lab/terminal-bench-runs",
+  "tasks_total": 80,
+  "is_placeholder": true,
+  "rows": [
+    {
+      "agent": "lenos",
+      "model": "gpt-5.4",
+      "provider": "OpenAI",
+      "tasks_solved": 52,
+      "tokens_input": 3950000,
+      "tokens_output": 410000,
+      "wall_seconds": 13320,
+      "cost_usd": 21.05
+    },
+    {
+      "agent": "lenos",
+      "model": "deepseek-v4-pro",
+      "provider": "DeepSeek",
+      "tasks_solved": 49,
+      "tokens_input": 4120000,
+      "tokens_output": 380000,
+      "wall_seconds": 14400,
+      "cost_usd": 8.40
+    },
+    {
+      "agent": "lenos",
+      "model": "mimo-v2.5-pro",
+      "provider": "MiniMax",
+      "tasks_solved": 45,
+      "tokens_input": 4840000,
+      "tokens_output": 410000,
+      "wall_seconds": 16500,
+      "cost_usd": 9.20
+    },
+    {
+      "agent": "lenos",
+      "model": "mimo-v2.5",
+      "provider": "MiniMax",
+      "tasks_solved": 42,
+      "tokens_input": 4300000,
+      "tokens_output": 370000,
+      "wall_seconds": 15120,
+      "cost_usd": 5.80
+    },
+    {
+      "agent": "lenos",
+      "model": "deepseek-v4-flash",
+      "provider": "DeepSeek",
+      "tasks_solved": 38,
+      "tokens_input": 3200000,
+      "tokens_output": 280000,
+      "wall_seconds": 10500,
+      "cost_usd": 2.10
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+/* =========================================================================
+   Typography — editorial register, Source Serif 4 + JetBrains Mono.
+   Self-hosted woff2 lives in /public/fonts/ — drop the files in and uncomment
+   the @font-face blocks below to replace the Google Fonts CDN linked in
+   BaseLayout.astro.
+   ========================================================================= */
+
+/* ----- @font-face (commented — switch on once woff2 files are in /public/fonts) -----
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/lenos-website/fonts/SourceSerif4-Variable.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/lenos-website/fonts/SourceSerif4-VariableItalic.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/lenos-website/fonts/JetBrainsMono-Variable.woff2") format("woff2-variations");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+/* ----- Base body ----- */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 240ms var(--ease-editorial),
+              color 240ms var(--ease-editorial);
+}
+
+/* ----- Selection ----- */
+::selection {
+  background: var(--color-brand-tint);
+  color: var(--color-ink);
+}
+
+/* ----- Focus ----- */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* ----- Tabular figures helper ----- */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* ----- Small caps via OpenType ----- */
+.smallcaps {
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  letter-spacing: 0.08em;
+}
+
+/* ----- Skip link ----- */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 0.5rem 1rem;
+  z-index: 100;
+}
+.skip:focus { left: 0; top: 0; }
+
+/* ----- Reduced-motion respect ----- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

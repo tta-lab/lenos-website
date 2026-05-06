@@ -1,0 +1,57 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description = "Lenos — a bash-first AI runtime with no tool-call layer. Compatible with every model that speaks shell.", ogImage } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL.href} />
+
+  <!-- OG / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalURL.href} />
+  {ogImageURL && <meta property="og:image" content={ogImageURL} />}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  {ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
+
+  <!-- Fonts — Google Fonts CDN (prototype + initial production).
+       To switch to self-hosted: drop woff2 in /public/fonts/, uncomment
+       @font-face in src/styles/typography.css, remove these <link>s. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&display=swap" />
+
+  <!-- Inline theme bootstrap to avoid flash-of-light before localStorage applies -->
+  <script is:inline>
+    (function () {
+      try {
+        var stored = localStorage.getItem('lenos-theme');
+        if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <slot />
+</body>
+</html>

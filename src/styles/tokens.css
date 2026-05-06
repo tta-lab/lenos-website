@@ -1,0 +1,78 @@
+/* =========================================================================
+   Design tokens — Reading Room Technical
+   Palette derives from lenos's own brand tokens (internal/ui/styles/styles.go).
+   Light = paper-warm derived from cream family; dark = lenos product palette
+   directly (so the website-product visual handoff is seamless).
+   ========================================================================= */
+
+@theme {
+  /* ----- Light theme (canonical surface) ----- */
+  --color-paper:        #f7f1e8;
+  --color-paper-deep:   #ede4d3;
+  --color-paper-rule:   #d8cebe;
+  --color-ink:          #1a1016;   /* lenos bgBase, used here as ink */
+  --color-ink-soft:     #4a3d35;
+  --color-ink-mute:     #8a7e6e;
+
+  /* ----- Brand accents — lenos canonical hexes ----- */
+  --color-brand:        #c4734f;   /* terracotta — BrandPrimaryHex */
+  --color-brand-soft:   #d4a574;   /* peach-tan  — BrandSecondaryHex */
+  --color-brand-gold:   #b8973e;   /* antique gold — BrandTertiaryHex */
+  --color-brand-amber:  #ffaf00;   /* phosphor amber — λ glyph (very sparing) */
+  --color-brand-tint:   rgb(196 115 79 / 0.18);
+
+  /* ----- Code surface ----- */
+  --color-code-bg:      #ede4d3;
+  --color-code-border:  #d8cebe;
+
+  /* ----- Diagnostic ----- */
+  --color-success:      #6a9955;
+  --color-danger:       #be5046;
+
+  /* ----- Type families ----- */
+  --font-display: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-body:    "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-mono:    "JetBrains Mono", "SF Mono", "Cascadia Code", monospace;
+
+  /* ----- Editorial scale ----- */
+  --text-display-xl: clamp(2.5rem, 5vw + 0.5rem, 4.5rem);
+  --text-display-l:  clamp(1.875rem, 2.5vw + 0.5rem, 2.625rem);
+  --text-display-m:  1.6875rem;
+  --text-h2:         1.5rem;
+  --text-h3:         1.25rem;
+  --text-body:       1.0625rem;
+  --text-small:      0.9375rem;
+  --text-xs:         0.8125rem;
+  --text-mono:       0.9rem;
+  --text-mono-block: 0.875rem;
+
+  --leading-display: 1.1;
+  --leading-prose:   1.65;
+  --leading-mono:    1.55;
+
+  /* ----- Containers ----- */
+  --container-marketing: 64rem;
+  --container-prose:     38rem;
+
+  --section-gap: 5rem;
+
+  --ease-editorial: cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+/* Dark theme — directly mirrors lenos product palette */
+[data-theme="dark"] {
+  --color-paper:       #1a1016;     /* lenos bgBase */
+  --color-paper-deep:  #2d2329;     /* lenos bgBaseLighter */
+  --color-paper-rule:  #3d3338;
+  --color-ink:         #f0ebe4;     /* lenos fgBase */
+  --color-ink-soft:    #c4bab0;     /* lenos fgHalfMuted */
+  --color-ink-mute:    #a89d94;     /* lenos fgMuted */
+
+  --color-brand:       #d4a574;     /* peach-tan reads better on dark */
+  --color-brand-soft:  #c4734f;
+  --color-brand-gold:  #b8973e;
+  --color-brand-tint:  rgb(212 165 116 / 0.18);
+
+  --color-code-bg:     #2d2329;
+  --color-code-border: #3d3338;
+}

@@ -1,0 +1,106 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Docs — lenos">
+  <SiteHeader current="docs" />
+  <main id="main" class="docs-shell">
+    <article>
+      <p class="eyebrow">Documentation</p>
+      <h1>Getting started</h1>
+      <p class="lede">
+        Install lenos, run your first session, configure providers, and
+        explore the agent runtime. Short reads, accurate, evergreen.
+      </p>
+      <ul class="doc-list">
+        <li>
+          <a href={`${base}/docs/install`}>
+            <span class="doc-title">Install</span>
+            <span class="doc-blurb">Homebrew, Go install, or pre-built binary. Two minutes.</span>
+          </a>
+        </li>
+        <li class="stub">
+          <span class="doc-title">Usage</span>
+          <span class="doc-blurb">Coming soon — interactive sessions, non-interactive runs, piping.</span>
+        </li>
+        <li class="stub">
+          <span class="doc-title">Configuration</span>
+          <span class="doc-blurb">Coming soon — config.json, providers, environment variables.</span>
+        </li>
+        <li class="stub">
+          <span class="doc-title">Agent runtime</span>
+          <span class="doc-blurb">Coming soon — bash-first loop, custom agents, async via einai.</span>
+        </li>
+      </ul>
+    </article>
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .docs-shell {
+    max-width: var(--container-marketing);
+    margin: 0 auto;
+    padding: 4rem 1.5rem 0;
+  }
+  article { max-width: var(--container-prose); }
+  .eyebrow {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.1em;
+    font-size: var(--text-xs);
+    color: var(--color-ink-mute);
+    margin: 0 0 0.5rem;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-display-l);
+    letter-spacing: -0.012em;
+    line-height: 1.15;
+    color: var(--color-ink);
+    margin: 0 0 1rem;
+  }
+  .lede {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-h3);
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+    margin: 0 0 2.5rem;
+    max-width: 50ch;
+  }
+  .doc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-paper-rule);
+  }
+  .doc-list li {
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--color-paper-rule);
+  }
+  .doc-list a, .doc-list li.stub {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .doc-list a:hover .doc-title { color: var(--color-brand); }
+  .doc-list li.stub { opacity: 0.55; }
+  .doc-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-h3);
+    color: var(--color-ink);
+    transition: color 200ms var(--ease-editorial);
+  }
+  .doc-blurb {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-ink-mute);
+  }
+</style>
