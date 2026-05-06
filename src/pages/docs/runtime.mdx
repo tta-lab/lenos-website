@@ -21,12 +21,14 @@ This page describes how lenos actually executes the agent loop. If you're evalua
 
 Lenos has no tool-call abstraction. The agent loop is a four-step cycle:
 
-1. The model receives the system prompt + conversation history and emits a response. The response is plain text containing one or more shell commands (in code blocks or inline).
-2. The runtime extracts the bash from the response.
-3. The runtime executes the bash inside a sandboxed subprocess. Stdout, stderr, and exit code are captured.
+1. The model receives the system prompt + conversation history and emits a response. **The response is pure bash** — not bash inside markdown fences, not bash inside JSON, just bash, the model's literal output.
+2. The runtime takes that response and executes it directly inside a sandboxed subprocess.
+3. Stdout, stderr, and exit code are captured.
 4. The output is appended to the conversation as the next message. Loop repeats.
 
 That's the entire protocol. There is no JSON tool-call schema between model and runtime, no `tool_use_id` to reconcile, no per-provider format adapter. The model speaks shell; the shell answers.
+
+Markdown-fenced bash (`` ```bash `` blocks) is an anti-pattern lenos's system prompt actively trains against — it adds tokens, hides the command from the parser, and reintroduces the very abstraction layer lenos drops.
 
 Tools the agent uses — `cat`, `src edit`, `web search`, `rg`, anything you can invoke from a shell — are real CLI binaries, not adapter shims. The structured ones (`src` for tree-sitter code reading and editing, `web` for search and fetch) come from [organon](https://github.com/tta-lab/organon), a separate package; standard ones (`cat`, `git`, `rg`) are whatever's on `PATH`. The agent doesn't care which; it just runs commands. See [install](/lenos-website/docs/install) for the one-liner that installs the full kit.
 
@@ -49,9 +51,15 @@ The transcript is the single source of truth for "what did the agent actually do
 
 ## Sandbox
 
-Lenos invokes shell commands through the [temenos](https://github.com/tta-lab) sandbox by default. Filesystem access is constrained to project paths plus a small allowlist; network access is policy-driven. The sandbox is auto-configured at install time — there is no permission JSON to maintain, no `--yolo` flag to remember.
+Lenos invokes shell commands through the [temenos](https://github.com/tta-lab/temenos) sandbox by default. Filesystem access is constrained to project paths plus a small allowlist; network access is policy-driven. The sandbox is auto-configured at install time — there is no permission JSON to maintain, no `--yolo` flag to remember.
 
-Per-agent access is either **readonly** or **readwrite**, declared at agent definition. That's the entire permission surface. Defaults are sensible; overrides happen in `config.json`.
+Read/write access is controlled by a runtime flag, not by agent config. Run an agent in read-only mode by passing `--readonly`:
+
+```bash
+lenos run --readonly --agent reviewer "review the changes in HEAD"
+```
+
+When set, the temenos sandbox blocks any writes to the working directory; the agent can read everything but cannot create, modify, or delete files in `cwd`. The flag requires temenos to be running — without it, the run errors out with a message saying so.
 
 ## Custom agents
 
