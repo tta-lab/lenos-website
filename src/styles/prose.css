@@ -1,0 +1,112 @@
+/* =========================================================================
+   Prose styles — applied to article elements (docs, blog MDX content).
+   ========================================================================= */
+
+article.prose {
+  max-width: var(--container-prose);
+}
+
+article.prose h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-display-l);
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+  margin: 0 0 1.5rem;
+  color: var(--color-ink);
+}
+
+article.prose h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-display-m);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 2rem 0 0.75rem;
+  color: var(--color-ink);
+}
+
+article.prose h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-h3);
+  margin: 1.5rem 0 0.5rem;
+  color: var(--color-ink);
+}
+
+article.prose p {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  color: var(--color-ink);
+  margin: 0 0 1.4em;
+}
+
+article.prose ul, article.prose ol {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  color: var(--color-ink);
+  margin: 0 0 1.4em;
+  padding-left: 1.5em;
+}
+
+article.prose li { margin-bottom: 0.4em; }
+
+article.prose a {
+  color: var(--color-brand);
+  border-bottom: 1px solid var(--color-brand);
+  text-decoration: none;
+  transition: color 200ms var(--ease-editorial);
+}
+
+article.prose a:hover {
+  color: var(--color-brand-soft);
+  border-bottom-color: var(--color-brand-soft);
+}
+
+article.prose pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-border);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-block);
+  line-height: var(--leading-mono);
+  margin: 0 0 1.4em;
+}
+
+article.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+article.prose :not(pre) > code {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-border);
+  padding: 0.05em 0.4em;
+}
+
+article.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-paper-rule);
+  margin: 2rem 0;
+}
+
+article.prose blockquote {
+  font-style: italic;
+  color: var(--color-ink-soft);
+  border-left: 3px solid var(--color-brand);
+  padding-left: 1rem;
+  margin: 1.4em 0;
+}
+
+article.prose .eyebrow {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-feature-settings: "smcp" 1;
+  letter-spacing: 0.1em;
+  font-size: var(--text-xs);
+  color: var(--color-ink-mute);
+  margin: 0 0 0.5rem;
+}

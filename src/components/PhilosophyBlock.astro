@@ -1,0 +1,108 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+<section class="philosophy" id="philosophy" aria-labelledby="philosophy-title">
+  <div class="philosophy-inner">
+    <p class="philosophy-eyebrow">On the design</p>
+    <h2 id="philosophy-title" class="philosophy-title">By subtraction.</h2>
+    <div class="philosophy-prose">
+      <p>
+        Lenos started as a fork of <a href="https://github.com/charmbracelet/crush">Crush</a><span class="footnote-mark">*</span>
+        by Charmbracelet. We owe them the foundation. What we changed is less
+        about adding and more about taking away — the tool-call layer, the
+        permission management, the assumption that an AI agent needs its own
+        protocol for talking to a computer.
+      </p>
+      <p>
+        What's left is small: a model, a sandboxed shell, a transcript.
+        Sandbox isolation comes for free from temenos. Multi-model support
+        comes for free from speaking shell instead of tool-call JSON. Lower
+        cost comes for free from fewer tokens. Each removal made the next
+        one possible.
+      </p>
+      <p>
+        If you've been frustrated by your runtime's tool-call edge cases,
+        your agent's permission management, or your model's reluctance to
+        run parallel tool calls — the <a href={`${base}/docs/install`}>docs</a> are a fast read.
+      </p>
+    </div>
+    <p class="philosophy-footnote">
+      <span class="footnote-mark">*</span>
+      <em>λ — lenos in lowercase greek; from λῆνος, the wine-press.
+      A vat where input is gathered, transformed, and refined into output.
+      An old name for an old idea; we like the lineage.</em>
+    </p>
+  </div>
+</section>
+
+<style>
+  .philosophy {
+    max-width: var(--container-marketing);
+    margin: 0 auto;
+    padding: var(--section-gap) 1.5rem 0;
+  }
+  .philosophy-inner { max-width: var(--container-prose); }
+  .philosophy-eyebrow {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.1em;
+    font-size: var(--text-xs);
+    color: var(--color-ink-mute);
+    margin: 0 0 0.75rem;
+  }
+  .philosophy-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-display-m);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--color-ink);
+    margin: 0 0 1.25rem;
+  }
+  .philosophy-prose {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--leading-prose);
+    color: var(--color-ink);
+  }
+  .philosophy-prose p {
+    margin: 0 0 1.4em;
+    text-wrap: pretty;
+  }
+  .philosophy-prose p:last-child { margin-bottom: 0; }
+  .philosophy-prose p:first-of-type::first-letter {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 3.6em;
+    line-height: 0.85;
+    float: left;
+    margin: 0.05em 0.12em -0.05em 0;
+    color: var(--color-brand);
+  }
+  .philosophy-prose em { color: var(--color-ink-soft); }
+  .philosophy-prose a {
+    color: var(--color-brand);
+    border-bottom: 1px solid var(--color-brand);
+  }
+  .footnote-mark {
+    font-size: 0.75em;
+    vertical-align: 0.3em;
+    color: var(--color-brand-gold);
+    margin-left: 0.05em;
+  }
+  .philosophy-footnote {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-small);
+    color: var(--color-ink-mute);
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-paper-rule);
+    line-height: 1.55;
+  }
+  .philosophy-footnote .footnote-mark {
+    color: var(--color-brand-gold);
+    margin-right: 0.4em;
+  }
+</style>

@@ -1,0 +1,201 @@
+---
+import { benchmarks, formatTokens, formatWall, formatCost } from "../lib/benchmarks";
+import type { BenchmarkRow } from "../lib/benchmarks";
+
+interface Props {
+  /** Limit number of rows shown (e.g. top-3 on landing). Defaults to all rows. */
+  limit?: number;
+  /** If true, show the methodology caption below the table. Defaults to true. */
+  showCaption?: boolean;
+}
+const { limit, showCaption = true } = Astro.props;
+
+// Default sort: tasks_solved desc — the canonical lenos truth view.
+const sorted: BenchmarkRow[] = [...benchmarks.rows].sort(
+  (a, b) => b.tasks_solved - a.tasks_solved
+);
+const rows = limit ? sorted.slice(0, limit) : sorted;
+
+const generatedDate = new Date(benchmarks.generated_at).toISOString().slice(0, 10);
+---
+<section class="benchmark" aria-labelledby="bench-title">
+  <header class="benchmark-head">
+    <p class="benchmark-eyebrow">Results</p>
+    <h2 id="bench-title" class="benchmark-title">Terminal Bench 2.0</h2>
+    <p class="benchmark-subhead">
+      <em>Reproducible benchmark, agent-editable. Generated {generatedDate} — </em>
+      <a href="#methodology">methodology →</a>
+      {benchmarks.is_placeholder && <em>. Placeholder data; real harness in development.</em>}
+    </p>
+  </header>
+  <div class="benchmark-table-wrap">
+    <table class="benchmark-table">
+      <thead>
+        <tr>
+          <th scope="col">Model</th>
+          <th scope="col">Provider</th>
+          <th scope="col">Agent</th>
+          <th scope="col" class="num">Solved <span aria-hidden="true">/{benchmarks.tasks_total}</span></th>
+          <th scope="col" class="num">Input tokens</th>
+          <th scope="col" class="num">Output tokens</th>
+          <th scope="col" class="num">Wall time</th>
+          <th scope="col" class="num">Cost (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <td class="model">{r.model}</td>
+            <td class="provider">{r.provider}</td>
+            <td><span class={`agent-pill ${r.agent === "lenos" ? "is-lenos" : ""}`}>{r.agent}</span></td>
+            <td class="num">{r.tasks_solved}</td>
+            <td class="num">{formatTokens(r.tokens_input)}</td>
+            <td class="num">{formatTokens(r.tokens_output)}</td>
+            <td class="num">{formatWall(r.wall_seconds)}</td>
+            <td class="num">{formatCost(r.cost_usd)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  {showCaption && (
+    <p class="benchmark-caption" id="methodology">
+      Methodology: {benchmarks.tasks_total} tasks from the Terminal Bench 2.0
+      corpus, single-shot evaluation, default agent config. Above: lenos run
+      across its planned model surface — gpt-5.4, deepseek-v4-pro and v4-flash,
+      mimo-v2.5 and v2.5-pro. Cross-runtime comparison rows (lenos vs codex
+      vs forgecode on a fixed model) ship in a sibling table once those
+      harnesses are wired up. Source:{" "}
+      <a href={benchmarks.harness_repo}>tta-lab/terminal-bench-runs</a>;
+      updates land via PR with a fresh <code>tb2.json</code>.
+      {benchmarks.is_placeholder && (
+        <> Numbers above are placeholder pending the v1.0.0 harness — this
+        caption stays here, calling that out, until the real numbers are in.</>
+      )}
+    </p>
+  )}
+</section>
+
+<style>
+  .benchmark {
+    max-width: var(--container-marketing);
+    margin: 0 auto;
+    padding: 5rem 1.5rem 0;
+  }
+  .benchmark-head { margin-bottom: 1.5rem; }
+  .benchmark-eyebrow {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.1em;
+    font-size: var(--text-xs);
+    color: var(--color-ink-mute);
+    margin: 0 0 0.5rem;
+  }
+  .benchmark-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-display-l);
+    letter-spacing: -0.012em;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--color-ink);
+  }
+  .benchmark-subhead {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-small);
+    color: var(--color-ink-mute);
+    margin: 0.5rem 0 0;
+  }
+  .benchmark-subhead a {
+    color: var(--color-brand);
+    border-bottom: 1px solid var(--color-brand);
+    font-style: normal;
+  }
+  .benchmark-table-wrap {
+    border-top: 1px solid var(--color-paper-rule);
+    margin-top: 1.5rem;
+    overflow-x: auto;
+  }
+  table.benchmark-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+  }
+  .benchmark-table thead th {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.1em;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--color-ink-mute);
+    text-align: left;
+    padding: 1rem 1rem 0.75rem 0;
+    border-bottom: 1px solid var(--color-paper-rule);
+    white-space: nowrap;
+  }
+  .benchmark-table thead th.num { text-align: right; padding-right: 1rem; }
+  .benchmark-table tbody tr {
+    transition: background 150ms var(--ease-editorial);
+    border-bottom: 1px solid var(--color-paper-rule);
+  }
+  .benchmark-table tbody tr:last-child { border-bottom: none; }
+  .benchmark-table tbody tr:hover { background: var(--color-paper-deep); }
+  .benchmark-table td {
+    padding: 0.875rem 1rem 0.875rem 0;
+    font-size: var(--text-body);
+    color: var(--color-ink);
+    vertical-align: baseline;
+  }
+  .benchmark-table td.num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--text-mono);
+    text-align: right;
+    padding-right: 1rem;
+    color: var(--color-ink);
+  }
+  .benchmark-table td.model { font-weight: 500; }
+  .benchmark-table td.provider {
+    color: var(--color-ink-soft);
+    font-size: var(--text-small);
+  }
+  .agent-pill {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.55rem;
+    background: transparent;
+    border: 1px solid var(--color-paper-rule);
+    color: var(--color-ink-soft);
+  }
+  .agent-pill.is-lenos {
+    background: var(--color-brand-tint);
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+  }
+  .benchmark-caption {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-small);
+    color: var(--color-ink-mute);
+    margin: 1.5rem 0 0;
+    max-width: 60ch;
+    line-height: 1.55;
+  }
+  .benchmark-caption a {
+    color: var(--color-brand);
+    border-bottom: 1px solid var(--color-brand);
+  }
+  .benchmark-caption code {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.92em;
+  }
+</style>

@@ -1,0 +1,126 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-block-title">Lineage</p>
+      <p class="footer-lineage">
+        Lenos is a fork of <a href="https://github.com/charmbracelet/crush">Crush</a> by
+        <a href="https://charm.sh">Charmbracelet</a>, originally created by
+        <a href="https://github.com/kujtimiihoxha">Kujtim Hoxha</a>.
+        We are grateful for the foundation. Distributed under
+        <a href="https://github.com/tta-lab/lenos/blob/main/LICENSE.md">FSL-1.1-MIT</a>.
+      </p>
+    </div>
+    <div>
+      <p class="footer-block-title">Project</p>
+      <ul class="footer-links">
+        <li><a href="https://github.com/tta-lab/lenos">Source</a></li>
+        <li><a href="https://github.com/tta-lab/lenos/releases">Releases</a></li>
+        <li><a href="https://github.com/tta-lab/lenos/issues">Issues</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-block-title">Ecosystem</p>
+      <ul class="footer-links">
+        <li><a href="https://github.com/tta-lab/ttal-cli">ttal</a></li>
+        <li><a href="https://github.com/tta-lab/einai">einai</a></li>
+        <li><a href="https://github.com/tta-lab/lenos">lenos</a></li>
+        <li><a href="https://github.com/tta-lab">tta-lab</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="colophon">
+    <a href="https://github.com/tta-lab/ttal-cli/discussions" class="discussions-link">
+      Questions and ideas
+      <span class="arrow" aria-hidden="true">→</span>
+      GitHub Discussions
+    </a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--section-gap);
+    background: var(--color-paper-deep);
+    border-top: 1px solid var(--color-paper-rule);
+  }
+  .footer-inner {
+    max-width: var(--container-marketing);
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2.5rem;
+  }
+  .footer-block-title {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.1em;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--color-ink-mute);
+    margin: 0 0 0.75rem;
+  }
+  .footer-lineage {
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    color: var(--color-ink-soft);
+    line-height: 1.55;
+    margin: 0;
+    max-width: 50ch;
+  }
+  .footer-lineage a {
+    color: var(--color-brand);
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms var(--ease-editorial);
+  }
+  .footer-lineage a:hover { border-color: var(--color-brand); }
+  .footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    color: var(--color-ink-soft);
+  }
+  .footer-links li { padding: 0.2rem 0; }
+  .footer-links a {
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms var(--ease-editorial);
+  }
+  .footer-links a:hover {
+    border-bottom-color: var(--color-ink-mute);
+    color: var(--color-ink);
+  }
+  .colophon {
+    border-top: 1px solid var(--color-paper-rule);
+    padding: 1.5rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    color: var(--color-ink-soft);
+    text-align: center;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .colophon .discussions-link {
+    color: var(--color-brand);
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms var(--ease-editorial);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+  }
+  .colophon .discussions-link:hover { border-bottom-color: var(--color-brand); }
+  .colophon .discussions-link .arrow {
+    color: var(--color-ink-mute);
+  }
+  @media (max-width: 720px) {
+    .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+  }
+</style>

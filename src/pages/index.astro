@@ -1,0 +1,92 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import HeroEditorial from "../components/HeroEditorial.astro";
+import KeyDifferentiators from "../components/KeyDifferentiators.astro";
+import InstallStrip from "../components/InstallStrip.astro";
+import BenchmarkTable from "../components/BenchmarkTable.astro";
+import PhilosophyBlock from "../components/PhilosophyBlock.astro";
+
+const base = import.meta.env.BASE_URL;
+
+const differentiators = [
+  {
+    marker: "i.",
+    title: "Compatible with any model that speaks bash.",
+    body: `Lenos drops the tool-call abstraction. Models output raw shell —
+      <code>cat</code>, <code>src edit</code>, <code>web search</code>,
+      <code>rg</code> — and the runtime executes it in a sandbox. No
+      provider-specific tool-call formats to track. No <code>tool_use_id</code>
+      mismatches when the model's output drifts from the runtime's schema.<sup
+      style="font-size:0.7em;color:var(--color-brand-gold);"><a
+      href="https://github.com/anthropics/claude-code/issues/3886"
+      style="color:inherit;border-bottom:none;">†</a></sup> No
+      <em>「please use parallel tool calls」</em> prompts the model ignores; in
+      bash, parallel is just <code>cmd1 &amp; cmd2 &amp; wait</code>. Every
+      model that speaks shell understands lenos.`,
+    caption: `† real-world examples:
+      <a href="https://github.com/anthropics/claude-code/issues/3886">anthropics/claude-code #3886</a>
+      (missing tool_result),
+      <a href="https://github.com/ollama/ollama/issues/12395">ollama/ollama #12395</a>
+      (Anthropic-compat backend pairing failure),
+      <a href="https://agi-xiaobai-no1.github.io/posts/model-switching-tool-use-compatibility/">model-switching incompatibility</a>
+      (Anthropic <code>tooluse_xxx</code> ↔ OpenAI <code>call_xxx</code> drift).
+      Every framework that maintains a tool-call schema fights this.`,
+  },
+  {
+    marker: "ii.",
+    title: "Sandbox by default. No permission JSON.",
+    body: `Lenos ships with the temenos sandbox enabled by default and
+      auto-configured. Filesystem isolation comes for free. No yolo flags to
+      remember, no permission dialogs interrupting your flow, no hundred-line
+      permission JSON to maintain across projects. The agent runs in a box;
+      the box has the rights it needs; you don't think about it.`,
+  },
+  {
+    marker: "iii.",
+    title: "Less, by design.",
+    body: `Bash output costs fewer tokens than structured tool-call JSON. The
+      benchmark above is partly an experiment in this hypothesis. The deeper
+      bet: optimize the most-common path, and everything else follows —
+      simpler runtime, lower cost, fewer abstractions to debug.
+      <em>「Perfection is achieved, not when there is nothing more to add, but
+      when there is nothing left to take away.」</em> — Saint-Exupéry,
+      <em>Terre des Hommes</em>, 1939.`,
+  },
+];
+
+const installMethods = [
+  {
+    label: "Homebrew",
+    command: "brew install tta-lab/ttal/lenos",
+  },
+  {
+    label: "Go install",
+    command: "go install github.com/tta-lab/lenos@latest",
+  },
+  {
+    label: "Binary",
+    command: "curl -L https://github.com/tta-lab/lenos/releases/latest/download/lenos -o /usr/local/bin/lenos && chmod +x /usr/local/bin/lenos",
+    display: "curl -L .../releases/latest/download/lenos -o /usr/local/bin/lenos",
+  },
+];
+---
+<BaseLayout title="Lenos — a bash-first AI runtime">
+  <SiteHeader current="home" />
+  <main id="main">
+    <HeroEditorial
+      statement={`No protocol. Just <span class="mark">shell</span>.`}
+      subhead="Lenos is an AI runtime with no tool-call layer. Models output raw bash; a sandbox runs it; output comes back. Compatible with every model that speaks shell — fewer tokens, fewer provider quirks, parallel calls for free."
+      primaryHref={`${base}/docs/install`}
+      primaryLabel="Install lenos →"
+      secondaryHref="#philosophy"
+      secondaryLabel="Read the philosophy →"
+    />
+    <KeyDifferentiators items={differentiators} />
+    <InstallStrip methods={installMethods} />
+    <BenchmarkTable limit={5} />
+    <PhilosophyBlock />
+  </main>
+  <SiteFooter />
+</BaseLayout>
