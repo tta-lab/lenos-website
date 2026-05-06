@@ -25,9 +25,14 @@ const generatedDate = new Date(benchmarks.generated_at).toISOString().slice(0, 1
     <p class="benchmark-subhead">
       <em>Reproducible benchmark, agent-editable. Generated {generatedDate} — </em>
       <a href="#methodology">methodology →</a>
-      {benchmarks.is_placeholder && <em>. Placeholder data; real harness in development.</em>}
     </p>
   </header>
+  {benchmarks.is_placeholder && (
+    <p class="benchmark-placeholder-banner">
+      <em>Placeholder data — the v1.0.0 benchmark harness is in development.
+      Real Terminal Bench 2.0 numbers land here the moment that run ships.</em>
+    </p>
+  )}
   <div class="benchmark-table-wrap">
     <table class="benchmark-table">
       <thead>
@@ -112,6 +117,20 @@ const generatedDate = new Date(benchmarks.generated_at).toISOString().slice(0, 1
     color: var(--color-brand);
     border-bottom: 1px solid var(--color-brand);
     font-style: normal;
+  }
+  .benchmark-placeholder-banner {
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+    margin: 1.25rem 0 0;
+    padding: 0.875rem 1rem;
+    border-left: 2px solid var(--color-brand);
+    background: var(--color-brand-tint);
+    max-width: 60ch;
+  }
+  .benchmark-placeholder-banner em {
+    font-style: italic;
   }
   .benchmark-table-wrap {
     border-top: 1px solid var(--color-paper-rule);
