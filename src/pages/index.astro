@@ -45,18 +45,6 @@ const differentiators = [
   },
   {
     marker: "iii.",
-    title: "Custom agents. Async via einai.",
-    body: `Define your own agents — <code>plan-gap-reviewer</code>,
-      <code>doc-writer</code>, anything you can describe with a system prompt
-      and a model — and call them from inside a session. Every agent inherits
-      the same sandboxed shell; what changes is the role, not the tools.
-      Long-running work goes async through <a href="https://github.com/tta-lab/einai">einai</a>'s
-      job queue: dispatch a sub-agent, keep working, collect the output when
-      it lands. The orchestration primitive comes from the runtime, not from
-      you stitching shell scripts together.`,
-  },
-  {
-    marker: "iv.",
     title: "Less, by design.",
     body: `Bash output costs fewer tokens than structured tool-call JSON. The
       benchmark above is partly an experiment in this hypothesis. The deeper
