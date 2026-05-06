@@ -1,0 +1,93 @@
+---
+layout: ../../layouts/BaseLayout.astro
+title: "Agent runtime — lenos"
+description: "How lenos executes the agent loop: bash-first, subprocess-per-call, sandboxed, transcripted."
+---
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+<SiteHeader current="docs" />
+
+<main id="main" style="max-width: 64rem; margin: 0 auto; padding: 4rem 1.5rem 0;">
+<article class="prose">
+
+<p class="eyebrow">Documentation / Architecture</p>
+
+# Agent runtime
+
+This page describes how lenos actually executes the agent loop. If you're evaluating lenos against another runtime, this is the page to read.
+
+## The bash-first loop
+
+Lenos has no tool-call abstraction. The agent loop is a four-step cycle:
+
+1. The model receives the system prompt + conversation history and emits a response. **The response is pure bash** — not bash inside markdown fences, not bash inside JSON, just bash, the model's literal output.
+2. The runtime takes that response and executes it directly inside a sandboxed subprocess.
+3. Stdout, stderr, and exit code are captured.
+4. The output is appended to the conversation as the next message. Loop repeats.
+
+That's the entire protocol. There is no JSON tool-call schema between model and runtime, no `tool_use_id` to reconcile, no per-provider format adapter. The model speaks shell; the shell answers.
+
+Markdown-fenced bash (`` ```bash `` blocks) is an anti-pattern lenos's system prompt actively trains against — it adds tokens, hides the command from the parser, and reintroduces the very abstraction layer lenos drops.
+
+Tools the agent uses — `cat`, `src edit`, `web search`, `rg`, anything you can invoke from a shell — are real CLI binaries, not adapter shims. The structured ones (`src` for tree-sitter code reading and editing, `web` for search and fetch) come from [organon](https://github.com/tta-lab/organon), a separate package; standard ones (`cat`, `git`, `rg`) are whatever's on `PATH`. The agent doesn't care which; it just runs commands. See [install](/lenos-website/docs/install) for the one-liner that installs the full kit.
+
+## Sessions
+
+Every interactive run creates a session, persisted to SQLite at `.lenos/lenos.db` in the workspace. Sessions store:
+
+- Message history (model input + output, bash commands + outputs)
+- Token usage per step
+- Files touched by the agent (`internal/filetracker`)
+- Pending-todo state (`internal/session/session.go`)
+
+`lenos --continue` reopens the most recent session. Sessions survive process restarts, machine reboots, and (when running under ttal) daemon respawns.
+
+## Transcript
+
+Alongside the SQLite session record, lenos writes a plain-Markdown transcript file to disk. The transcript is human-readable, watcher-friendly (fsnotify), and append-only with file-locking guards (`flock`) so external tooling can tail it safely.
+
+The transcript is the single source of truth for "what did the agent actually do." It captures the prose, the bash, and the bash output in a single linear stream. Auditable. Reproducible. Debugger-free.
+
+## Sandbox
+
+Lenos invokes shell commands through the [temenos](https://github.com/tta-lab/temenos) sandbox by default. Filesystem access is constrained to project paths plus a small allowlist; network access is policy-driven. The sandbox is auto-configured at install time — there is no permission JSON to maintain, no `--yolo` flag to remember.
+
+Read/write access is controlled by a runtime flag, not by agent config. Run an agent in read-only mode by passing `--readonly`:
+
+```bash
+lenos run --readonly --agent reviewer "review the changes in HEAD"
+```
+
+When set, the temenos sandbox blocks any writes to the working directory; the agent can read everything but cannot create, modify, or delete files in `cwd`. The flag requires temenos to be running — without it, the run errors out with a message saying so.
+
+## Custom agents
+
+Define an agent by giving it a name, a model, and a system prompt. Agents live in `~/.config/lenos/agents/<name>.md` (global) or `.lenos/agents/<name>.md` (project-local). Invoke via:
+
+```bash
+lenos --agent <name> "task description"
+```
+
+The system prompt is composed in four layers (top to bottom): bash-first runtime protocol → git context → agent identity → memory/skills/task. The agent identity is the spine of the composition — not a trailing memory block — so the model orients on the role from token zero.
+
+## Multi-model
+
+The provider abstraction lives in [`charm.land/fantasy`](https://charm.land/fantasy). Lenos supports Anthropic, OpenAI, Google Gemini, AWS Bedrock, GitHub Copilot, Hyper, MiniMax, Xiaomi (mimo), DeepSeek, Vercel, and others. Switching providers is a config-file change, not a code change.
+
+Each session pins a model at start. The session can be resumed against the same model; switching models mid-session creates a new branch.
+
+## Hooks
+
+Lenos fires a configurable shell command after each model step. Use it for status reporting, observability, ttal status updates, or custom integrations. See [hooks](/lenos-website/docs/hooks) for the envelope schema and contract.
+
+## What lenos doesn't do
+
+- **No tool-call protocol.** No JSON schemas between model and runtime.
+- **No permission dialogs.** Sandbox policy is declared once, not negotiated per call.
+- **No bespoke agent orchestration.** Multi-agent fleets and async sub-agent dispatch live one layer up — in [ttal](https://github.com/tta-lab/ttal-cli) and [einai](https://github.com/tta-lab/einai). Lenos is one runtime, doing one thing well.
+
+</article>
+</main>
+
+<SiteFooter />

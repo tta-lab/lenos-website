@@ -22,17 +22,29 @@ const base = import.meta.env.BASE_URL;
             <span class="doc-blurb">Homebrew, Go install, or pre-built binary. Two minutes.</span>
           </a>
         </li>
-        <li class="stub">
-          <span class="doc-title">Usage</span>
-          <span class="doc-blurb">Coming soon — interactive sessions, non-interactive runs, piping.</span>
+        <li>
+          <a href={`${base}/docs/usage`}>
+            <span class="doc-title">Usage</span>
+            <span class="doc-blurb">Interactive, one-shot, piped, continued. Three modes, one loop.</span>
+          </a>
         </li>
-        <li class="stub">
-          <span class="doc-title">Configuration</span>
-          <span class="doc-blurb">Coming soon — config.json, providers, environment variables.</span>
+        <li>
+          <a href={`${base}/docs/configuration`}>
+            <span class="doc-title">Configuration</span>
+            <span class="doc-blurb">config.json, providers, env vars, skills directories.</span>
+          </a>
         </li>
-        <li class="stub">
-          <span class="doc-title">Agent runtime</span>
-          <span class="doc-blurb">Coming soon — bash-first loop, custom agents, async via einai.</span>
+        <li>
+          <a href={`${base}/docs/runtime`}>
+            <span class="doc-title">Agent runtime</span>
+            <span class="doc-blurb">Bash-first loop, sessions, sandbox, custom agents, multi-model.</span>
+          </a>
+        </li>
+        <li>
+          <a href={`${base}/docs/hooks`}>
+            <span class="doc-title">Hooks</span>
+            <span class="doc-blurb">Post-step shell command for status, observability, integrations.</span>
+          </a>
         </li>
       </ul>
     </article>

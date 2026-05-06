@@ -1,0 +1,67 @@
+---
+layout: ../../layouts/BaseLayout.astro
+title: "Usage — lenos"
+description: "Run lenos interactively, run it non-interactively, pipe content in, continue sessions."
+---
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+<SiteHeader current="docs" />
+
+<main id="main" style="max-width: 64rem; margin: 0 auto; padding: 4rem 1.5rem 0;">
+<article class="prose">
+
+<p class="eyebrow">Documentation / Getting started</p>
+
+# Usage
+
+Three modes: interactive, non-interactive (one-shot), and piped. All three speak the same agent loop and persist sessions to local SQLite.
+
+## Interactive
+
+```bash
+lenos
+```
+
+Drops you into a session in the current working directory. Type prompts; lenos invokes the model, the model writes bash, the runtime executes it in a sandbox, output flows back. `Ctrl-d` to leave the session; the session persists and can be resumed.
+
+## Non-interactive
+
+```bash
+lenos run "Summarize the changes in this PR"
+```
+
+Single-shot. Lenos invokes the model with the prompt, streams output to stdout, exits when the loop terminates. Suitable for scripts, CI hooks, and `xargs` pipelines.
+
+## Pipe content in
+
+```bash
+cat README.md | lenos run "Make this more concise"
+```
+
+Stdin is piped to the agent as additional context, then the prompt is appended. Combine with `lenos run` for tasks like editing, summarizing, or transforming text.
+
+## Continue the most recent session
+
+```bash
+lenos --continue
+```
+
+Resumes the most recent session in the current project. State and conversation history are restored from SQLite.
+
+## Custom data directory
+
+```bash
+lenos --data-dir /path/to/custom/.lenos
+```
+
+Overrides the default `.lenos/` location for project-local data. Useful for sandboxing, testing, or running multiple isolated sessions side-by-side.
+
+---
+
+For configuration options, see [configuration](/lenos-website/docs/configuration). For the runtime architecture, see [agent runtime](/lenos-website/docs/runtime).
+
+</article>
+</main>
+
+<SiteFooter />
