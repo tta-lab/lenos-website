@@ -32,8 +32,11 @@ const base = import.meta.env.BASE_URL;
     </div>
   </div>
   <div class="colophon">
-    Set in <em>Source Serif 4</em> and <em>JetBrains Mono</em>. Built with
-    <code>astro</code> on <code>tta-lab.github.io/lenos-website</code>.
+    <a href="https://discord.gg/lenos" class="discord-link">
+      Join the conversation on Discord
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+    <em class="placeholder">(coming soon)</em>
   </div>
 </footer>
 
@@ -94,21 +97,35 @@ const base = import.meta.env.BASE_URL;
   }
   .colophon {
     border-top: 1px solid var(--color-paper-rule);
-    padding: 1.25rem 1.5rem;
+    padding: 1.5rem 1.5rem;
     font-family: var(--font-body);
-    font-style: italic;
+    font-size: var(--text-small);
+    color: var(--color-ink-soft);
+    text-align: center;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .colophon .discord-link {
+    color: var(--color-brand);
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms var(--ease-editorial);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+  }
+  .colophon .discord-link:hover { border-bottom-color: var(--color-brand); }
+  .colophon .discord-link .arrow { font-style: normal; }
+  .colophon .placeholder {
+    font-family: var(--font-body);
+    font-variant: small-caps;
+    font-feature-settings: "smcp" 1;
+    letter-spacing: 0.08em;
+    font-style: normal;
     font-size: var(--text-xs);
     color: var(--color-ink-mute);
-    text-align: center;
-    letter-spacing: 0.02em;
-  }
-  .colophon code {
-    font-family: var(--font-mono);
-    font-style: normal;
-    background: var(--color-paper);
-    padding: 0.05em 0.35em;
-    border: 1px solid var(--color-paper-rule);
-    font-size: 0.95em;
   }
   @media (max-width: 720px) {
     .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
