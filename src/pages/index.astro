@@ -14,17 +14,16 @@ const differentiators = [
   {
     marker: "i.",
     title: "Compatible with any model that speaks bash.",
-    body: `Lenos drops the tool-call abstraction. Models output raw shell —
+    body: `Lenos drops the tool-call layer. Models write raw shell —
       <code>cat</code>, <code>src edit</code>, <code>web search</code>,
       <code>rg</code> — and the runtime executes it in a sandbox. No
-      provider-specific tool-call formats to track. No <code>tool_use_id</code>
-      mismatches when the model's output drifts from the runtime's schema.<sup
+      provider-specific schemas to track. No <code>tool_use_id</code>
+      mismatches when the model drifts from the schema.<sup
       style="font-size:0.7em;color:var(--color-brand-gold);"><a
       href="https://github.com/anthropics/claude-code/issues/3886"
-      style="color:inherit;border-bottom:none;">†</a></sup> No
-      <em>「please use parallel tool calls」</em> prompts the model ignores; in
-      bash, parallel is just <code>cmd1 &amp; cmd2 &amp; wait</code>. Every
-      model that speaks shell understands lenos.`,
+      style="color:inherit;border-bottom:none;">†</a></sup> And no
+      <em>「please use parallel tool calls」</em> prompts the model ignores —
+      in bash, parallel is just <code>cmd1 &amp; cmd2 &amp; wait</code>.`,
     caption: `† real-world examples:
       <a href="https://github.com/anthropics/claude-code/issues/3886">anthropics/claude-code #3886</a>
       (missing tool_result),
@@ -37,19 +36,19 @@ const differentiators = [
   {
     marker: "ii.",
     title: "Sandbox by default. No permission JSON.",
-    body: `Lenos ships with the temenos sandbox enabled by default and
-      auto-configured. Filesystem isolation comes for free. No yolo flags to
+    body: `Lenos ships with the temenos sandbox enabled and auto-configured.
+      Filesystem isolation comes for free. No <code>--yolo</code> flags to
       remember, no permission dialogs interrupting your flow, no hundred-line
-      permission JSON to maintain across projects. The agent runs in a box;
-      the box has the rights it needs; you don't think about it.`,
+      JSON to maintain across projects. The agent runs in a box; the box has
+      the rights it needs; you don't think about it.`,
   },
   {
     marker: "iii.",
     title: "Less, by design.",
-    body: `Bash output costs fewer tokens than structured tool-call JSON. The
-      benchmark above is partly an experiment in this hypothesis. The deeper
-      bet: optimize the most-common path, and everything else follows —
-      simpler runtime, lower cost, fewer abstractions to debug.
+    body: `Bash costs fewer tokens than structured tool-call JSON. The
+      benchmark above tests that. The deeper bet is a design discipline —
+      what's removed enables what's left. Simpler runtime, lower cost, fewer
+      abstractions to debug.
       <em>「Perfection is achieved, not when there is nothing more to add, but
       when there is nothing left to take away.」</em> — Saint-Exupéry,
       <em>Terre des Hommes</em>, 1939.`,
@@ -77,7 +76,7 @@ const installMethods = [
   <main id="main">
     <HeroEditorial
       statement={`No protocol. Just <span class="mark">shell</span>.`}
-      subhead="Lenos is an AI runtime with no tool-call layer. Models output raw bash; a sandbox runs it; output comes back. Compatible with every model that speaks shell — fewer tokens, fewer provider quirks, parallel calls for free."
+      subhead="An AI runtime with no tool-call layer. Models write bash; a sandbox runs it. Any model that speaks shell — fewer tokens, fewer provider quirks, parallel for free."
       primaryHref={`${base}/docs/install`}
       primaryLabel="Install lenos →"
       secondaryHref="#philosophy"

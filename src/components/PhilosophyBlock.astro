@@ -7,23 +7,24 @@ const base = import.meta.env.BASE_URL;
     <h2 id="philosophy-title" class="philosophy-title">By subtraction.</h2>
     <div class="philosophy-prose">
       <p>
-        Lenos started as a fork of <a href="https://github.com/charmbracelet/crush">Crush</a><span class="footnote-mark">*</span>
-        by Charmbracelet. We owe them the foundation. What we changed is less
-        about adding and more about taking away — the tool-call layer, the
-        permission management, the assumption that an AI agent needs its own
-        protocol for talking to a computer.
+        Forks usually grow. Lenos shrank. We started with
+        <a href="https://github.com/charmbracelet/crush">Crush</a><span class="footnote-mark">*</span>
+        by Charmbracelet — we owe them the foundation — and changed it
+        less by adding and more by taking away: the tool-call layer, the
+        permission management, the assumption that an AI agent needs its
+        own protocol for talking to a computer.
       </p>
       <p>
         What's left is small: a model, a sandboxed shell, a transcript.
         Sandbox isolation comes for free from temenos. Multi-model support
-        comes for free from speaking shell instead of tool-call JSON. Lower
-        cost comes for free from fewer tokens. Each removal made the next
-        one possible.
+        comes for free from shell instead of JSON. Lower cost comes for
+        free from fewer tokens. Each removal made the next one possible.
       </p>
       <p>
-        If you've been frustrated by your runtime's tool-call edge cases,
-        your agent's permission management, or your model's reluctance to
-        run parallel tool calls — the <a href={`${base}/docs/install`}>docs</a> are a fast read.
+        If you've ever fought your runtime's tool-call edge cases, wrestled
+        permission management, or watched your model ignore
+        <em>「use parallel tool calls」</em> — the
+        <a href={`${base}/docs/install`}>docs</a> are a fast read.
       </p>
     </div>
     <p class="philosophy-footnote">
