@@ -29,7 +29,7 @@
     {
       "agent": "lenos",
       "model": "mimo-v2.5-pro",
-      "provider": "MiniMax",
+      "provider": "Xiaomi",
       "tasks_solved": 45,
       "tokens_input": 4840000,
       "tokens_output": 410000,
@@ -39,7 +39,7 @@
     {
       "agent": "lenos",
       "model": "mimo-v2.5",
-      "provider": "MiniMax",
+      "provider": "Xiaomi",
       "tasks_solved": 42,
       "tokens_input": 4300000,
       "tokens_output": 370000,
