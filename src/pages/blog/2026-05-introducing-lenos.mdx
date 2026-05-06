@@ -1,0 +1,57 @@
+---
+layout: ../../layouts/BaseLayout.astro
+title: "Lenos — an AI runtime by subtraction"
+description: "Why we forked Crush, what we removed, and the bet that it adds up."
+date: "2026-05-06"
+author: "the TTal team"
+---
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+<SiteHeader current="blog" />
+
+<main id="main" style="max-width: 64rem; margin: 0 auto; padding: 4rem 1.5rem 0;">
+<article class="prose prose-blog">
+
+<p class="eyebrow">Blog · 2026-05-06 · the lenos team</p>
+
+# Lenos — an AI runtime by subtraction
+
+<p class="dropcap">Most AI runtimes ship a protocol. Lenos doesn't.</p>
+
+The shell is already there. It's universal, well-understood by every model trained on internet-scale text, and it has a forty-year track record of giving programs ways to compose. So we built a runtime where the model writes bash, a sandbox runs it, and the output comes back as text. No tool-call layer. No permission JSON. No vendor-specific schemas to chase. Every model that speaks shell understands lenos.
+
+## Why we forked Crush
+
+Lenos started as a fork of [Crush](https://github.com/charmbracelet/crush) by Charmbracelet. We're indebted to that foundation. Crush got the terminal experience, the session model, and the editor integration right in ways we did not want to rebuild — so we didn't.
+
+What pushed us to fork rather than upstream was a difference of premise. Crush, like most agent runtimes, treats the tool-call protocol as the primary interface between model and machine. That premise carries cost: every provider gets its own JSON dialect, every new tool needs schema-side maintenance, and the model regularly ignores the meta-prompts that try to make tool use parallel or efficient.
+
+Anyone who's run an agent through enough sessions has seen the symptoms. *`tool_use ids were found without tool_result blocks`* — published as [a bug](https://github.com/anthropics/claude-code/issues/3886) against Anthropic's claude-code. *`unexpected tool_use_id found in tool_result blocks`* — the same shape on OpenClaw. *`Invalid tool usage: mismatch between tool calls and tool results`* — [Ollama's variant](https://github.com/ollama/ollama/issues/12395) when serving an Anthropic-compatible API. [Format drift](https://agi-xiaobai-no1.github.io/posts/model-switching-tool-use-compatibility/) on model swap, where Anthropic's `tooluse_xxx` and OpenAI's `call_xxx` refuse to reconcile mid-session. Every framework that maintains a tool-call schema fights one of these modes.
+
+We chose not to maintain a schema. So we kept the parts of Crush we admired — the TUI, the multi-provider plumbing, the session model — and removed the parts whose costs we no longer wanted to pay. The tool-call layer is gone. The permission management is gone. What's left is small enough to read in one sitting and, we hope, simple enough to trust.
+
+## What's different
+
+Four claims, each verifiable.
+
+**Compatibility comes from speaking shell.** Models that don't have native tool-call support — and there are a lot of them, especially among the open-weight class — work in lenos as well as the frontier models. There is no schema to align on, only the contract every Unix-trained model already knows: read input, write commands, observe output, repeat.
+
+**Parallel is the default, not the prompt.** Anthropic [documents](https://docs.claude.com/en/docs/agents-and-tools/tool-use/parallel-tool-use) parallel tool use as a configurable option with a `disable_parallel_tool_use` parameter and prompt-level guidance. In practice, models routinely fail to invoke calls in parallel even when the prompt asks for it — a failure mode anyone shipping an agent has worked around. In bash, parallel isn't an instruction the model needs to remember; it's `cmd1 & cmd2 & wait`. The shell does the work the prompt was failing to do.
+
+**Token cost drops because the format is leaner.** Outputting raw shell is cheaper than emitting structured tool-call JSON. Early runs are encouraging; the [v1.0.0 benchmark harness](/lenos-website/benchmarks) will tell us whether the savings hold across task shapes. We'd rather show real numbers later than plausible numbers now.
+
+**Sandbox isolation is the default, not the opt-in.** Lenos ships with the [temenos](https://github.com/tta-lab/temenos) sandbox enabled and auto-configured at install. Filesystem isolation comes for free. There is no `--yolo` flag to remember when you'd rather just trust the agent, no permission dialog interrupting flow, no hundred-line JSON to maintain across projects. The agent runs in a box. The box has the rights it needs. You don't think about it.
+
+## What's next
+
+Two things are next: the full Terminal Bench 2.0 run on lenos's planned model surface — gpt-5.4, deepseek-v4-pro, deepseek-v4-flash, mimo-v2.5, and mimo-v2.5-pro — and polish across the TUI, the install flow, and the docs. The placeholder numbers on the [benchmarks page](/lenos-website/benchmarks) get replaced with real ones the moment the run lands. We'd rather earn the next roadmap item than announce it.
+
+If you've ever fought your runtime's tool-call edge cases, wrestled permission management, or watched your model ignore *「use parallel tool calls」* — install lenos and try a session. The [docs](/lenos-website/docs/install) are a fast read.
+
+*— the TTal team*
+
+</article>
+</main>
+
+<SiteFooter />
