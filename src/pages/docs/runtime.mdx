@@ -28,7 +28,7 @@ Lenos has no tool-call abstraction. The agent loop is a four-step cycle:
 
 That's the entire protocol. There is no JSON tool-call schema between model and runtime, no `tool_use_id` to reconcile, no per-provider format adapter. The model speaks shell; the shell answers.
 
-Tools the agent uses — `cat`, `src edit`, `web search`, `rg`, anything you can invoke from a shell — are real CLI binaries, not adapter shims. Some are reimplementations bundled with lenos (`src edit` for safe text replacement, `web search` for online lookups); some are whatever's on `PATH` (`cat`, `git`, `rg`). The agent doesn't care which; it just runs commands.
+Tools the agent uses — `cat`, `src edit`, `web search`, `rg`, anything you can invoke from a shell — are real CLI binaries, not adapter shims. The structured ones (`src` for tree-sitter code reading and editing, `web` for search and fetch) come from [organon](https://github.com/tta-lab/organon), a separate package; standard ones (`cat`, `git`, `rg`) are whatever's on `PATH`. The agent doesn't care which; it just runs commands. See [install](/lenos-website/docs/install) for the one-liner that installs the full kit.
 
 ## Sessions
 
