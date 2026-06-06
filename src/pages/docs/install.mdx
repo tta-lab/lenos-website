@@ -17,6 +17,8 @@ import SiteFooter from "../../components/SiteFooter.astro";
 
 Lenos is installed with the release bootstrap script. It supports macOS and Linux on x86_64 and arm64.
 
+On Linux, install `bubblewrap` first. Lenos uses it for sandbox isolation and most distributions do not preinstall it. See [sandbox setup](/lenos-website/docs/sandbox) for distro commands.
+
 ## One-line install
 
 ```bash
@@ -49,7 +51,7 @@ The landing-page examples that cite `src edit`, `web search`, `skill get`, and `
 
 ## Sandbox config
 
-Lenos links the Temenos sandbox SDK directly. There is no separate sandbox daemon to install. The installer writes a starter Temenos config to `~/.config/temenos/config.toml` when that file does not already exist.
+Lenos links the Temenos sandbox SDK directly. There is no separate sandbox daemon to install. The installer writes a starter Temenos config to `~/.config/temenos/config.toml` when that file does not already exist. Linux hosts need `bwrap`; see [sandbox setup](/lenos-website/docs/sandbox).
 
 </article>
 </main>

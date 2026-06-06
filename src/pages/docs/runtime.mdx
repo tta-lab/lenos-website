@@ -62,6 +62,8 @@ The transcript is the single source of truth for "what did the agent actually do
 
 Lenos links the [temenos](https://github.com/tta-lab/temenos) sandbox SDK directly and invokes shell commands through it by default. Filesystem access is constrained to project paths plus a small allowlist; network access is policy-driven. The sandbox is auto-configured at install time — there is no separate sandbox daemon, no permission JSON to maintain, no `--yolo` flag to remember.
 
+On Linux, the sandbox requires `bwrap` from bubblewrap. See [sandbox setup](/lenos-website/docs/sandbox) for distro install commands and troubleshooting.
+
 Read/write access is controlled by a runtime flag, not by agent config. Run an agent in read-only mode by passing `--readonly`:
 
 ```bash
