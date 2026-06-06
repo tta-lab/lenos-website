@@ -23,7 +23,7 @@ Three modes: interactive, non-interactive (one-shot), and piped. All three speak
 lenos
 ```
 
-Drops you into a session in the current working directory. Type prompts; lenos invokes the model, the model replies in Markdown and wraps bash calls in `<run>` blocks, the runtime executes those blocks in a sandbox, and output flows back. `Ctrl-d` to leave the session; the session persists and can be resumed.
+Drops you into a session in the current working directory. Type prompts; lenos invokes the model, the model replies in Markdown and wraps bash calls in `<run>` blocks, the runtime executes those blocks in a sandbox, and output flows back. Task sessions also keep an agent journal so long work can compact and continue without carrying the full transcript in every prompt. `Ctrl-d` to leave the session; the session persists and can be resumed.
 
 ## Non-interactive
 

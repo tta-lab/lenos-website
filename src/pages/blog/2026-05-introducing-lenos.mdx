@@ -19,7 +19,7 @@ import SiteFooter from "../../components/SiteFooter.astro";
 
 <p class="dropcap">Most AI runtimes ship a tool-call schema. Lenos doesn't.</p>
 
-The shell is already there. It's universal, well-understood by every model trained on internet-scale text, and it has a forty-year track record of giving programs ways to compose. So we built a runtime where the model writes normal Markdown to the human, wraps bash calls in `<run>` blocks, a sandbox runs those blocks, and the output comes back as text. No tool-call layer. No permission JSON. No vendor-specific schemas to chase. Every model that can write shell understands lenos.
+The shell is already there. It's universal, well-understood by every model trained on internet-scale text, and it has a forty-year track record of giving programs ways to compose. So we built a runtime where the model writes normal Markdown to the human, wraps bash calls in `<run>` blocks, a sandbox runs those blocks, and the output comes back as text. Code editing is a CLI. Web search is a CLI. Skill lookup is a CLI. Project lookup is a CLI. No tool-call layer. No permission JSON. No vendor-specific schemas to chase. Every model that can write shell understands lenos.
 
 ## Why we forked Crush
 
@@ -35,11 +35,11 @@ We chose not to maintain a schema. So we kept the parts of Crush we admired — 
 
 Four claims, each verifiable.
 
-**Compatibility comes from speaking Markdown and shell.** Models that don't have native tool-call support — and there are a lot of them, especially among the open-weight class — work in lenos as well as the frontier models. There is no provider schema to align on, only a small contract every Unix-trained model already knows: explain in Markdown, run commands when needed, observe output, repeat.
+**Compatibility comes from speaking Markdown and shell.** Models that don't have native tool-call support — and there are a lot of them, especially among the open-weight class — work in lenos as well as the frontier models. There is no provider schema to align on, only a small contract every Unix-trained model already knows: explain in Markdown, run commands when needed, observe output, repeat. Bash is all you need.
 
 **Parallel is the default, not the prompt.** Anthropic [documents](https://docs.claude.com/en/docs/agents-and-tools/tool-use/parallel-tool-use) parallel tool use as a configurable option with a `disable_parallel_tool_use` parameter and prompt-level guidance. In practice, models routinely fail to invoke calls in parallel even when the prompt asks for it — a failure mode anyone shipping an agent has worked around. In bash, parallel isn't an instruction the model needs to remember; it's `cmd1 & cmd2 & wait`. The shell does the work the prompt was failing to do.
 
-**Token cost drops because the format is leaner.** Markdown plus a small `<run>` block is cheaper than structured tool-call JSON, and stable prompt prefixes improve cache locality. Recent DeepSeek V4 Pro runs have been in the 98-99% prompt-cache hit range; the [v1.0.0 benchmark harness](/lenos-website/benchmarks) will tell us how the savings hold across task shapes.
+**Token cost drops because the format is leaner.** Markdown plus a small `<run>` block is cheaper than structured tool-call JSON. In typical tool-heavy turns, the run protocol cuts protocol tokens by 40%-60%. Stable prompt prefixes improve cache locality, and the agent journal lets long tasks compact without losing continuity. Recent DeepSeek V4 Pro runs have been in the 98-99% prompt-cache hit range; the [v1.0.0 benchmark harness](/lenos-website/benchmarks) will tell us how the savings hold across task shapes.
 
 **Sandbox isolation is the default, not the opt-in.** Lenos ships with the [temenos](https://github.com/tta-lab/temenos) sandbox enabled and auto-configured at install. Filesystem isolation comes for free. There is no `--yolo` flag to remember when you'd rather just trust the agent, no permission dialog interrupting flow, no hundred-line JSON to maintain across projects. The agent runs in a box. The box has the rights it needs. You don't think about it.
 

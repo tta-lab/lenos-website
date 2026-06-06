@@ -32,6 +32,14 @@ Markdown-fenced bash (`` ```bash `` blocks) is for showing code to the human, no
 
 Tools the agent uses — `cat`, `src edit`, `web search`, `skill get`, `project get`, `rg`, anything you can invoke from a shell — are real CLI binaries, not adapter shims. The structured ones (`src`, `web`, `skill`, `project`) come from [organon](https://github.com/tta-lab/organon); standard ones (`cat`, `git`, `rg`) are whatever's on `PATH`. The agent doesn't care which; it just runs commands. See [install](/lenos-website/docs/install) for the one-liner that installs the full kit.
 
+The practical effect is smaller prompts. Native tool calls spend tokens on schemas, call IDs, argument wrappers, and provider-specific pairing records. Lenos's Markdown plus `<run>` protocol cuts protocol tokens by 40%-60% in typical tool-heavy turns, while keeping the prompt prefix stable enough for high cache hit rates.
+
+## Agent journal
+
+Task sessions maintain a plain session journal. The agent updates it as work changes, reads it at startup and after compaction, and uses it as the durable handoff for long tasks. This keeps continuity outside the main model history: full transcripts remain auditable, but fresh context windows do not need to carry every prior turn.
+
+Journal-backed compaction is the cache story in practice. Lenos can compact aggressively, keep stable runtime context at the front of the prompt, and still give the agent enough state to continue the task.
+
 ## Sessions
 
 Every interactive run creates a session, persisted to SQLite at `.lenos/lenos.db` in the workspace. Sessions store:
@@ -40,6 +48,7 @@ Every interactive run creates a session, persisted to SQLite at `.lenos/lenos.db
 - Token usage per step
 - Files touched by the agent (`internal/filetracker`)
 - Pending-todo state (`internal/session/session.go`)
+- Compaction boundary for fresh context windows
 
 `lenos --continue` reopens the most recent session. Sessions survive process restarts, machine reboots, and (when running under ttal) daemon respawns.
 

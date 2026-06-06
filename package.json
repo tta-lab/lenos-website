@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "private": true,
-  "description": "Landing, docs, and blog for lenos — a terminal AI runtime for the ttal ecosystem.",
+  "description": "Landing, docs, and blog for lenos — bash is all you need.",
   "engines": {
     "node": ">=22.12.0"
   },

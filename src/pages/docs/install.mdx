@@ -37,7 +37,7 @@ After installation, run `lenos --help` to verify. Configure model keys in `~/.le
 
 ## Included tools
 
-The installer installs Lenos plus the Organon CLIs that Lenos prompts use:
+The installer installs Lenos plus the Organon CLIs that Lenos prompts use. This is the tool layer: plain shell commands instead of hidden adapter APIs.
 
 - **`lenos`** — the terminal agent runtime.
 - **`src`** — tree-sitter symbol-aware code reading and editing. Parses files into an AST, assigns each symbol a 2-char ID, edits by symbol reference rather than line number or text match. Works with Go, Rust, TypeScript, Python, and many others.
@@ -45,7 +45,7 @@ The installer installs Lenos plus the Organon CLIs that Lenos prompts use:
 - **`skill`** — skill discovery CLI used by lenos and the broader ttal ecosystem (`skill get <name>`, `skill list`).
 - **`project`** — project lookup CLI used by local workflows and agent context.
 
-The landing-page examples that cite `src edit`, `web search`, `skill get`, and `project get` refer to these binaries.
+The landing-page examples that cite `src edit`, `web search`, `skill get`, and `project get` refer to these binaries. The same command surface is visible to humans and agents.
 
 ## Sandbox config
 

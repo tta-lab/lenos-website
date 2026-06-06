@@ -13,14 +13,14 @@ const base = import.meta.env.BASE_URL;
 const differentiators = [
   {
     marker: "i.",
-    title: "Markdown for humans, run blocks for work.",
-    body: `Lenos drops provider-specific tool-call schemas. Models reply in
-      Markdown, then wrap shell commands in simple <code>&lt;run&gt;</code>
-      blocks —
-      <code>cat</code>, <code>src edit</code>, <code>web search</code>,
-      <code>rg</code> — and the runtime executes it in a sandbox. No
-      provider-specific schemas to track. No <code>tool_use_id</code>
-      mismatches when the model drifts from the schema.<sup
+    title: "Bash is all you need.",
+    body: `Lenos keeps tools as CLIs. File edits are <code>src edit</code>,
+      web lookup is <code>web search</code>, skills are found with
+      <code>skill</code>, project context comes from <code>project</code>,
+      and normal Unix tools still work. The model replies in Markdown and wraps
+      shell calls in <code>&lt;run&gt;</code> blocks. No provider-specific
+      schemas to track. No <code>tool_use_id</code> mismatches when the model
+      drifts from the schema.<sup
       style="font-size:0.7em;color:var(--color-brand-gold);"><a
       href="https://github.com/anthropics/claude-code/issues/3886"
       style="color:inherit;border-bottom:none;">†</a></sup> And no
@@ -46,12 +46,14 @@ const differentiators = [
   },
   {
     marker: "iii.",
-    title: "Less, by design.",
-    body: `A small run-block protocol costs fewer tokens than structured
-      tool-call JSON. The deeper bet is cache locality: stable prompt
-      prefixes, compact runtime context, and fewer moving parts for providers
-      to disagree on. Recent DeepSeek V4 Pro runs have been in the 98-99%
-      prompt-cache hit range.
+    title: "40%-60% fewer protocol tokens.",
+    body: `Native tool calls spend tokens on JSON schemas, call IDs, argument
+      wrappers, and pairing records. Lenos uses Markdown plus a small run block,
+      cutting protocol token cost by 40%-60% in typical tool-heavy turns. The
+      deeper bet is cache locality: stable prompt prefixes, compact runtime
+      context, and a session journal that preserves continuity without dragging
+      full history forward. Recent DeepSeek V4 Pro runs have been in the
+      98-99% prompt-cache hit range.
       <em>「Perfection is achieved, not when there is nothing more to add, but
       when there is nothing left to take away.」</em> — Saint-Exupéry,
       <em>Terre des Hommes</em>, 1939.`,
@@ -69,8 +71,8 @@ const installMethods = [
   <SiteHeader current="home" />
   <main id="main">
     <HeroEditorial
-      statement={`Markdown plus <span class="mark">run blocks</span>.`}
-      subhead="A terminal AI runtime with a built-in sandbox. Models write normal Markdown and wrap bash calls in run blocks: fewer tokens, better cache locality, fewer provider quirks."
+      statement={`Bash is <span class="mark">all you need</span>.`}
+      subhead="A terminal AI runtime with a built-in sandbox, CLI-native tools, Markdown plus run blocks, and an agent journal built for cheap, cache-friendly long work."
       primaryHref={`${base}/docs/install`}
       primaryLabel="Install lenos →"
       secondaryHref="#philosophy"
