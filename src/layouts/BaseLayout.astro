@@ -7,7 +7,7 @@ interface Props {
   ogImage?: string;
 }
 
-const { title, description = "Lenos — a bash-first AI runtime with no tool-call layer. Compatible with every model that speaks shell.", ogImage } = Astro.props;
+const { title, description = "Lenos — a terminal AI runtime with Markdown replies, simple run blocks, and a built-in sandbox.", ogImage } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage ? new URL(ogImage, Astro.site).href : undefined;
 ---

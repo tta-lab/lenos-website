@@ -1,7 +1,7 @@
 # lenos-website
 
 Landing, docs, blog, and benchmarks for [lenos](https://github.com/tta-lab/lenos)
-— a bash-first AI runtime for the [ttal](https://github.com/tta-lab/ttal-cli) ecosystem.
+— a terminal AI runtime for the [ttal](https://github.com/tta-lab/ttal-cli) ecosystem.
 
 Built with [Astro](https://astro.build) + [Tailwind CSS v4](https://tailwindcss.com)
 + [MDX](https://mdxjs.com). Static build, deployed to GitHub Pages at

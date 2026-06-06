@@ -13,8 +13,10 @@ const base = import.meta.env.BASE_URL;
 const differentiators = [
   {
     marker: "i.",
-    title: "Compatible with any model that speaks bash.",
-    body: `Lenos drops the tool-call layer. Models write raw shell —
+    title: "Markdown for humans, run blocks for work.",
+    body: `Lenos drops provider-specific tool-call schemas. Models reply in
+      Markdown, then wrap shell commands in simple <code>&lt;run&gt;</code>
+      blocks —
       <code>cat</code>, <code>src edit</code>, <code>web search</code>,
       <code>rg</code> — and the runtime executes it in a sandbox. No
       provider-specific schemas to track. No <code>tool_use_id</code>
@@ -45,10 +47,11 @@ const differentiators = [
   {
     marker: "iii.",
     title: "Less, by design.",
-    body: `Bash costs fewer tokens than structured tool-call JSON. The
-      benchmark above tests that. The deeper bet is a design discipline —
-      what's removed enables what's left. Simpler runtime, lower cost, fewer
-      abstractions to debug.
+    body: `A small run-block protocol costs fewer tokens than structured
+      tool-call JSON. The deeper bet is cache locality: stable prompt
+      prefixes, compact runtime context, and fewer moving parts for providers
+      to disagree on. Recent DeepSeek V4 Pro runs have been in the 98-99%
+      prompt-cache hit range.
       <em>「Perfection is achieved, not when there is nothing more to add, but
       when there is nothing left to take away.」</em> — Saint-Exupéry,
       <em>Terre des Hommes</em>, 1939.`,
@@ -57,26 +60,17 @@ const differentiators = [
 
 const installMethods = [
   {
-    label: "Homebrew",
-    command: "brew install tta-lab/ttal/lenos",
-  },
-  {
-    label: "Go install",
-    command: "go install github.com/tta-lab/lenos@latest",
-  },
-  {
-    label: "Binary",
-    command: "curl -L https://github.com/tta-lab/lenos/releases/latest/download/lenos -o /usr/local/bin/lenos && chmod +x /usr/local/bin/lenos",
-    display: "curl -L .../releases/latest/download/lenos -o /usr/local/bin/lenos",
+    label: "macOS/Linux",
+    command: "curl -fsSL https://github.com/tta-lab/lenos/releases/latest/download/install.sh | sh",
   },
 ];
 ---
-<BaseLayout title="Lenos — a bash-first AI runtime">
+<BaseLayout title="Lenos — a terminal AI runtime">
   <SiteHeader current="home" />
   <main id="main">
     <HeroEditorial
-      statement={`No protocol. Just <span class="mark">shell</span>.`}
-      subhead="An AI runtime with no tool-call layer. Models write bash; a sandbox runs it. Any model that speaks shell — fewer tokens, fewer provider quirks, parallel for free."
+      statement={`Markdown plus <span class="mark">run blocks</span>.`}
+      subhead="A terminal AI runtime with a built-in sandbox. Models write normal Markdown and wrap bash calls in run blocks: fewer tokens, better cache locality, fewer provider quirks."
       primaryHref={`${base}/docs/install`}
       primaryLabel="Install lenos →"
       secondaryHref="#philosophy"
