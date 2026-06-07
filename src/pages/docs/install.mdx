@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/BaseLayout.astro
 title: "Install — lenos"
-description: "Install lenos via Homebrew, Go's toolchain, or a pre-built binary."
+description: "Install lenos and its companion CLIs on macOS or Linux."
 ---
 import SiteHeader from "../../components/SiteHeader.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
@@ -15,83 +15,43 @@ import SiteFooter from "../../components/SiteFooter.astro";
 
 # Install
 
-Lenos is distributed three ways: Homebrew (recommended for ttal users), Go's toolchain, or a pre-built binary from the releases page.
+Lenos is installed with the release bootstrap script. It supports macOS and Linux on x86_64 and arm64.
 
-## Homebrew
+On Linux, install `bubblewrap` first. Lenos uses it for sandbox isolation and most distributions do not preinstall it. See [sandbox setup](/lenos-website/docs/sandbox) for distro commands.
 
-```bash
-brew install tta-lab/ttal/lenos
-```
-
-This taps the `tta-lab/homebrew-ttal` repository and installs the `lenos` binary to your Homebrew prefix. The same tap distributes `ttal` and `flicknote`.
-
-## Go install
+## One-line install
 
 ```bash
-go install github.com/tta-lab/lenos@latest
+curl -fsSL https://github.com/tta-lab/lenos/releases/latest/download/install.sh | sh
 ```
 
-Requires Go 1.23 or later.
+The script downloads the `lenos-installer` release archive for your platform, installs binaries to `~/.local/bin`, and writes starter config files only when they do not already exist.
 
-## Binary
+Add `~/.local/bin` to your `PATH` if needed:
 
-Download a pre-built archive for your platform from the [releases page](https://github.com/tta-lab/lenos/releases) and place the extracted binary on your `PATH`.
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
 
-After installation, run `lenos --help` to verify. The first invocation creates `~/.config/lenos/config.json` with default providers; configure your model keys there or via environment variables documented in [configuration](/lenos-website/docs/configuration).
+After installation, run `lenos --help` to verify. Configure model keys in `~/.lenos/config.json`, workspace `.lenos/config.json`, or environment variables documented in [configuration](/lenos-website/docs/configuration).
 
 ---
 
-## Companion tools
+## Included tools
 
-Lenos works with three sister tools from the ttal ecosystem. All three ship through the same Homebrew tap.
+The installer installs Lenos plus the Organon CLIs that Lenos prompts use. This is the tool layer: plain shell commands instead of hidden adapter APIs.
 
-### organon — the agent's CLI tools (recommended)
-
-The bash-first agent loop assumes the agent can call structured CLI tools for code reading/editing, web search, and skill discovery. These come from [organon](https://github.com/tta-lab/organon).
-
-```bash
-brew install tta-lab/ttal/organon
-```
-
-This installs three binaries on `PATH`:
-
+- **`lenos`** — the terminal agent runtime.
 - **`src`** — tree-sitter symbol-aware code reading and editing. Parses files into an AST, assigns each symbol a 2-char ID, edits by symbol reference rather than line number or text match. Works with Go, Rust, TypeScript, Python, and many others.
-- **`web`** — web search (subcommands: `web "<query>"` for search, `web docs` for library docs).
+- **`web`** — web search and fetch.
 - **`skill`** — skill discovery CLI used by lenos and the broader ttal ecosystem (`skill get <name>`, `skill list`).
+- **`project`** — project lookup CLI used by local workflows and agent context.
 
-The landing-page differentiators that cite `src edit` and `web search` refer to these binaries. Install organon to put them on `PATH` for the agent.
+The landing-page examples that cite `src edit`, `web search`, `skill get`, and `project get` refer to these binaries. The same command surface is visible to humans and agents.
 
-### temenos — sandbox (recommended)
+## Sandbox config
 
-The filesystem sandbox feature is provided by [temenos](https://github.com/tta-lab/temenos), a separate daemon that wraps shell execution with seatbelt (macOS) or bubblewrap (Linux).
-
-```bash
-brew install tta-lab/ttal/temenos
-temenos daemon install     # registers as a launchd service on macOS
-temenos daemon status      # verify it's running
-```
-
-When temenos is running, lenos routes shell execution through it automatically — no config change required. Without temenos, shell commands run unsandboxed; install temenos before running lenos against untrusted prompts.
-
-### einai — async sub-agent dispatch (optional)
-
-For dispatching sub-agents asynchronously through a job queue, install [einai](https://github.com/tta-lab/einai). Einai also runs as a daemon; install it as a launchd service so the queue is always available:
-
-```bash
-brew install tta-lab/ttal/einai
-ei daemon install     # launchd service on macOS
-ei daemon status      # verify
-```
-
-Einai exposes the `ei` CLI and dispatches sub-agents via a unix-socket job queue (`~/.einai/daemon.sock`). Optional if you don't need async sub-agents.
-
-### One-liner install of the full kit
-
-```bash
-brew install tta-lab/ttal/lenos tta-lab/ttal/organon tta-lab/ttal/temenos tta-lab/ttal/einai
-temenos daemon install
-ei daemon install
-```
+Lenos links the Temenos sandbox SDK directly. There is no separate sandbox daemon to install. The installer writes a starter Temenos config to `~/.config/temenos/config.toml` when that file does not already exist. Linux hosts need `bwrap`; see [sandbox setup](/lenos-website/docs/sandbox).
 
 </article>
 </main>

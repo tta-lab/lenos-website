@@ -1,0 +1,93 @@
+---
+layout: ../../layouts/BaseLayout.astro
+title: "Sandbox — lenos"
+description: "Install bubblewrap on Linux and understand how lenos sandboxing works."
+---
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+<SiteHeader current="docs" />
+
+<main id="main" style="max-width: 64rem; margin: 0 auto; padding: 4rem 1.5rem 0;">
+<article class="prose">
+
+<p class="eyebrow">Documentation / Runtime</p>
+
+# Sandbox
+
+Lenos links the Temenos sandbox SDK directly. There is no sandbox daemon to install.
+
+On macOS, Temenos uses the system sandbox. On Linux, Temenos uses [bubblewrap](https://github.com/containers/bubblewrap), exposed as the `bwrap` command. Most Linux distributions do not install `bwrap` by default, so install it before running Lenos with sandboxing enabled.
+
+## Install bubblewrap
+
+Debian / Ubuntu:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y bubblewrap
+```
+
+Fedora:
+
+```bash
+sudo dnf install bubblewrap
+```
+
+Arch Linux:
+
+```bash
+sudo pacman -S bubblewrap
+```
+
+openSUSE:
+
+```bash
+sudo zypper install bubblewrap
+```
+
+Alpine:
+
+```bash
+sudo apk add bubblewrap
+```
+
+Nix:
+
+```bash
+nix profile install nixpkgs#bubblewrap
+```
+
+Verify:
+
+```bash
+command -v bwrap
+bwrap --version
+```
+
+## Install Lenos
+
+After `bwrap` is available, install Lenos:
+
+```bash
+curl -fsSL https://github.com/tta-lab/lenos/releases/latest/download/install.sh | sh
+```
+
+The installer writes a starter Temenos config to `~/.config/temenos/config.toml` when that file does not already exist. Edit that file to change what paths the sandbox can read and write.
+
+## Troubleshooting
+
+If `bwrap` exists but sandbox startup fails with a namespace or permission error, the Linux host may have unprivileged user namespaces disabled. On managed servers, containers, and locked-down CI runners, this is a host policy decision. Enable unprivileged user namespaces or run Lenos on a host where bubblewrap is allowed.
+
+If you need to confirm that the sandbox is the failing layer, run:
+
+```bash
+lenos run --readonly "check the current project without editing files"
+```
+
+The `--readonly` flag should let the agent read the current working directory while blocking writes to it.
+
+</article>
+</main>
+
+<SiteFooter />
